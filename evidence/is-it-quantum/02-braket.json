@@ -1,0 +1,32 @@
+{
+ "project": "Is it quantum?",
+ "label": "AWS Braket local simulator (Qollab)",
+ "saved_at": "2026-10-11T11:43:47+00:00",
+ "source": "The RESULTS line this run wrote to Qollab's console.",
+ "results": {
+  "backend": "default",
+  "mode": "local",
+  "shots": 1024,
+  "score": 0.9991853704637743,
+  "se": 0.018001152648066465,
+  "n": 4096,
+  "circuits": [
+   [
+    0.988,
+    0.0351
+   ],
+   [
+    1.0103,
+    0.0354
+   ],
+   [
+    0.9268,
+    0.0383
+   ],
+   [
+    1.0716,
+    0.0352
+   ]
+  ]
+ }
+}

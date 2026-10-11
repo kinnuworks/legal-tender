@@ -9,7 +9,8 @@ from qiskit import transpile
 from . import VERSION, circuits, score as scoring
 
 LOCAL_SHOTS = 1024
-REMOTE_SHOTS = 512
+REMOTE_SHOTS = 1024   # IonQ simulators: one job, so it may as well be a good one
+QPU_SHOTS = 400        # a real IonQ machine: the same job, priced by the shot
 FAKERS = ("coin", "mimic", "peeker")
 
 
@@ -31,6 +32,13 @@ def _kind(backend):
     return "remote" if "ionq" in text else "local"
 
 
+def _shots(backend, kind):
+    if kind != "remote":
+        return LOCAL_SHOTS
+    text = f"{type(backend).__module__} {type(backend).__name__} {_backend_name(backend)}".lower()
+    return QPU_SHOTS if "qpu" in text else REMOTE_SHOTS
+
+
 def describe(backend, force_kind=""):
     """The machine that was picked and the circuits it will be tested on."""
     kind = force_kind or _kind(backend)
@@ -38,7 +46,7 @@ def describe(backend, force_kind=""):
         "version": VERSION,
         "backend": _backend_name(backend),
         "kind": kind,
-        "shots": REMOTE_SHOTS if kind == "remote" else LOCAL_SHOTS,
+        "shots": _shots(backend, kind),
         "qubits": circuits.QUBITS,
         "circuits": [circuits.describe(seed) for seed in circuits.SEEDS],
     })

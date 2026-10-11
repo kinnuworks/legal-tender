@@ -1,0 +1,32 @@
+{
+ "project": "Is it quantum?",
+ "label": "Built-in simulator (Qollab)",
+ "saved_at": "2026-10-11T11:40:44+00:00",
+ "source": "The RESULTS line this run wrote to Qollab's console.",
+ "results": {
+  "backend": "basic_simulator",
+  "mode": "local",
+  "shots": 1024,
+  "score": 1.0078600080299203,
+  "se": 0.018291384242957447,
+  "n": 4096,
+  "circuits": [
+   [
+    0.964,
+    0.0354
+   ],
+   [
+    0.9761,
+    0.0352
+   ],
+   [
+    1.0659,
+    0.0397
+   ],
+   [
+    1.0254,
+    0.0359
+   ]
+  ]
+ }
+}

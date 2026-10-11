@@ -1,0 +1,32 @@
+{
+ "project": "Is it quantum?",
+ "label": "IBM Kingston noise model (Qollab)",
+ "saved_at": "2026-10-11T11:46:14+00:00",
+ "source": "The RESULTS line this run wrote to Qollab's console.",
+ "results": {
+  "backend": "fake_kingston",
+  "mode": "local",
+  "shots": 1024,
+  "score": 0.8907860445406184,
+  "se": 0.018207354236132747,
+  "n": 4096,
+  "circuits": [
+   [
+    0.9492,
+    0.0354
+   ],
+   [
+    0.8676,
+    0.036
+   ],
+   [
+    0.8692,
+    0.0376
+   ],
+   [
+    0.8772,
+    0.0366
+   ]
+  ]
+ }
+}

@@ -328,7 +328,10 @@ async function guard(work) {
   try {
     await work();
   } catch (err) {
-    say(`${err?.message ?? err} This page never invents answers to fill a gap.`, true);
+    const text = String(err?.message ?? err);
+    // IonQ runs one job at a time for an account, and says so with this error.
+    const busy = /already running/i.test(text) ? ' IonQ is still busy with an earlier job from this account. Press Stop, wait a minute, then Run again.' : '';
+    say(`${text}${busy} This page never invents answers to fill a gap.`, true);
   } finally {
     S.busy = false;
   }
@@ -371,6 +374,43 @@ await guard(async () => {
   say('');
   show('lineup');
 });
+
+// A self-check for forks and for testing on a new machine. Switched on, it
+// presses every control in turn after loading and writes what happened to the
+// console, so a run can be checked without a mouse.
+const SELF_CHECK = false;
+
+async function selfCheck() {
+  const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const text = (selector) => (document.querySelector(selector)?.textContent ?? '').replace(/\s+/g, ' ').trim();
+  let ok = 0;
+  let failed = 0;
+  const step = async (name, selector, read, expect) => {
+    const el = document.querySelector(selector);
+    if (!el || el.disabled) { failed++; console.log(`SELFCHECK FAILED: ${name}: no control to press`); return; }
+    el.click();
+    await pause(700);
+    const seen = text(read);
+    if (expect.test(seen) && !$('status').classList.contains('bad')) { ok++; console.log(`SELFCHECK ok: ${name}: ${seen.slice(0, 100)}`); }
+    else { failed++; console.log(`SELFCHECK FAILED: ${name}: saw "${seen.slice(0, 100)}", status "${text('#status')}"`); }
+  };
+  const view = (id) => `#nav button[data-view="${id}"]`;
+  await step('open the line-up', view('lineup'), '#stage h2', /line-up/i);
+  await step('pick machine A', '#pick-a', '.verdict', /Right|Wrong/);
+  await step('deal another pair', '#again', '#pick-b', /B is the real one/);
+  await step('pick machine B', '#pick-b', '.verdict', /Right|Wrong/);
+  await step('open the fingerprint', '#next', '#stage h2', /fingerprint/i);
+  await step('take 50 more answers', '#more', '#stage', /answers/);
+  await step('take them all', '#all', '#stage', /answers/);
+  await step('unmask the machines', '#unmask', '#stage', /real|faker/i);
+  await step('open the cheats', view('cheats'), '#stage h2', /cheats/i);
+  await step('open results', view('results'), '#stage h2', /Results/i);
+  await step('save the evidence', '#save', '#status', /console|box/);
+  await step('open what it is for', view('why'), '#stage h2', /for/i);
+  console.log(`SELFCHECK done: ${ok} ok, ${failed} failed.`);
+}
+
+if (SELF_CHECK) await selfCheck();
 
 // Qollab ends a run when this file finishes, and the page stops responding
 // with it. Waiting here keeps it live until Stop is pressed.

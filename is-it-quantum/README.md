@@ -4,7 +4,11 @@ Two machines say they ran your circuit. One of them is faking it.
 
 This effort is supported by Qollab & IonQ.
 
-Demo video: ADD YOUR PUBLIC VIDEO LINK HERE. Theme: Quantum Unlocked. MIT licence.
+Demo video: ADD YOUR PUBLIC VIDEO LINK HERE
+
+Theme: Quantum Unlocked. Licence: MIT.
+
+Source, tests and saved runs: https://github.com/kinnuworks/legal-tender (the `is-it-quantum` folder)
 
 A quantum computer running a random circuit gives a stream of answers that looks like noise. So does a faker flipping coins. This project puts the two side by side and asks you to pick the real one, which you can't do by eye. Then it shows the test that can: the one behind Google's quantum supremacy claims. Last, it lets three fakers loose on that test, and one of them scores higher than the real machine. Working out why is the lesson.
 
@@ -41,17 +45,21 @@ The fingerprint is an interference pattern. Each circuit turns every qubit by ra
 
 ## Results
 
-ADD ONE ROW PER MACHINE YOU RUN ON QOLLAB.
+Each machine row is one run on Qollab, read from the line the run writes to the console.
 
 | Machine | Score (95% interval) | Answers | Jobs |
 |---|---|---|---|
-| Built-in simulator (run locally) | 0.98 (0.95 to 1.02) | 4,096 | 4 |
+| Built-in simulator (Qollab) | 1.01 (0.97 to 1.04) | 4,096 | four jobs |
+| AWS Braket local simulator (Qollab) | 1.00 (0.96 to 1.03) | 4,096 | four jobs |
+| IBM Kingston noise model (Qollab) | 0.89 (0.86 to 0.93) | 4,096 | four jobs |
 | A perfect machine | 1.00 | | |
 | The coin flipper | 0.00 | | |
 | The mimic | 0.25 | | |
 | The peeker | 2.75 | | |
 
 The three fakers' scores are their exact averages over the four circuits, worked out from the fingerprints.
+
+The two ideal simulators score 1 within their intervals. IBM's Kingston noise model scores 0.89, six standard errors below a perfect machine. The test sees that machine's errors with nothing but its answers to go on.
 
 To reproduce a row: run the project on that machine, open Results, and press **Save the evidence**. The file holds the machine's name, each circuit's fingerprint, every answer the machine gave and the scores.
 
@@ -83,7 +91,7 @@ People use the same number for plainer jobs.
 
 ## What is new here
 
-- A new context. No project on Qollab covers cross-entropy benchmarking or how quantum supremacy claims are checked.
+- A new context. We found no other project on Qollab built around cross-entropy benchmarking or how quantum supremacy claims are checked.
 - A technical extension. The score is rescaled to stay honest on small circuits, reported with intervals, and run on every Qollab backend, with each faker's exact score computed as a control.
 - A way of teaching. The page states the test's weakness instead of hiding it. The spoofing problem is an open research question [4], and the player meets it by watching a cheat win.
 
@@ -99,7 +107,9 @@ People use the same number for plainer jobs.
 
 The circuits are fixed by their seeds, so every run on every machine is tested against the same four fingerprints. On local simulators each circuit is its own job. On IonQ backends the four sit side by side in one 20-qubit circuit.
 
-Counts arrive sorted, so the answers are shuffled before the page deals them out; the shuffle changes their order and nothing else. The fakers and the dealing use the browser's random number generator. If a run fails the page says so and shows no numbers.
+Counts arrive sorted, so the answers are shuffled before the page deals them out. The shuffle changes their order and nothing else. The fakers and the dealing use the browser's random number generator. If a run fails the page says so and shows no numbers.
+
+`main.js` carries a self-check. Switched on, it presses every control in turn after loading and writes what happened to the console. We used it to confirm on Qollab that all twelve controls respond.
 
 Each plate has 32 cells, one per possible answer, likeliest first. A ring's area is how often the fingerprint says that answer should come up. A dot's area is how often the machine gave it.
 
@@ -134,7 +144,7 @@ All code was written inside the build window, 9 to 11 October 2026. Nothing was 
 - Change `QUBITS` and `DEPTH` in `xeb/circuits.py` and watch the score fall as circuits deepen.
 - Add your own faker to `xeb/score.py` and see whether it beats the mimic.
 - Restrict the CNOTs to neighbouring qubits and compare machines again.
-- Run it on real IonQ hardware and add a row to the table.
+- Run it on real IonQ hardware and add a row to the table. On a real machine the page sends the same one job with 400 shots.
 
 ## References
 

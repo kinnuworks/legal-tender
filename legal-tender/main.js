@@ -1377,7 +1377,10 @@ async function guard(work) {
   try {
     await work();
   } catch (err) {
-    say(`${err?.message ?? err} This page never invents results to fill a gap.`, true);
+    const text = String(err?.message ?? err);
+    // IonQ runs one job at a time for an account, and says so with this error.
+    const busy = /already running/i.test(text) ? ' IonQ is still busy with an earlier job from this account. Press Stop, wait a minute, then Run again.' : '';
+    say(`${text}${busy} This page never invents results to fill a gap.`, true);
   } finally {
     S.busy = false;
   }
