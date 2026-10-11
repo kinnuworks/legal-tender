@@ -1,6 +1,6 @@
 # Legal Tender
 
-[Demo video](ADD YOUR PUBLIC VIDEO LINK HERE) | [Source on GitHub](https://github.com/kinnuworks/legal-tender) | [The proof](#the-proof-on-the-page) | [Results](#results) | MIT licence
+[Demo video](https://youtu.be/hcYQKXyhFs4) | [Source on GitHub](https://github.com/kinnuworks/legal-tender) | [The proof](#the-proof-on-the-page) | [Results](#results) | MIT licence
 
 **A banknote you can't photocopy. Go on, try.** You get three ways to forge a note whose serial number is eight qubits. Then you change sides and redesign the note. Every note, forgery and teller check is a Qiskit circuit run on the machine you pick, and as the page loads it proves that no machine of any kind could forge a qubit better than the ones it runs.
 
