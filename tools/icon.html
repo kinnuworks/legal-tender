@@ -1,0 +1,59 @@
+<!doctype html>
+<!-- The project's square icon: the note's seal with the teller's stamp across it.
+     Open in a browser, or run tools/icon.sh to save docs/icon.png. -->
+<html lang="en"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: #101412; }
+  svg { display: block; width: 100vmin; height: 100vmin; }
+  text { font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; }
+</style></head><body>
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Legal Tender">
+  <defs>
+    <linearGradient id="iris" x1="0" x2="1" y1="0" y2="0.6">
+      <stop offset="0" stop-color="#DCEBD8"/><stop offset="0.52" stop-color="#F0ECD9"/><stop offset="1" stop-color="#E5DDF0"/>
+    </linearGradient>
+    <pattern id="screen" width="26" height="8" patternUnits="userSpaceOnUse"><path d="M0 4q6.5-5.4 13 0t13 0" fill="none" stroke="#1C6A50" stroke-width="0.6"/></pattern>
+    <pattern id="cross" width="38" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(64)"><path d="M0 5.5q9.5-7 19 0t19 0" fill="none" stroke="#5B2D91" stroke-width="0.5"/></pattern>
+    <radialGradient id="clear" cx="0.5" cy="0.5" r="0.5"><stop offset="0.6" stop-color="#F2F1E4" stop-opacity="0.9"/><stop offset="1" stop-color="#F2F1E4" stop-opacity="0"/></radialGradient>
+    <filter id="ink" x="-6%" y="-12%" width="112%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.35" numOctaves="3" seed="11" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.2" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.05 0.3" numOctaves="2" seed="4" result="streak"/>
+      <feColorMatrix in="streak" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3.6 0 0 0 -0.6" result="worn"/>
+      <feComposite in="rough" in2="worn" operator="in"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" fill="url(#iris)"/>
+  <rect width="512" height="512" fill="url(#screen)" opacity="0.55"/>
+  <rect width="512" height="512" fill="url(#cross)" opacity="0.5"/>
+  <circle cx="256" cy="236" r="232" fill="url(#clear)"/>
+  <g id="rose" fill="none" stroke="#1C6A50"></g>
+  <text x="256" y="298" text-anchor="middle" font-size="176" font-weight="900" font-stretch="125%" fill="#123628">8</text>
+  <g transform="rotate(-11 256 404)" filter="url(#ink)">
+    <rect x="62" y="352" width="388" height="104" rx="9" fill="#F2F1E4" fill-opacity="0.82" stroke="#5B2D91" stroke-width="10"/>
+    <rect x="78" y="368" width="356" height="72" rx="4" fill="none" stroke="#5B2D91" stroke-width="3"/>
+    <text x="256" y="426" text-anchor="middle" font-size="62" font-weight="800" font-stretch="118%" letter-spacing="7" fill="#5B2D91">FORGED</text>
+  </g>
+</svg>
+<script>
+  // The same woven ring the banknote in the game carries, drawn larger.
+  const g = document.getElementById('rose');
+  const rings = [{ radius: 176, swing: 36, waves: 24, strands: 7, w: 2 }, { radius: 104, swing: 17, waves: 8, strands: 4, w: 2 }];
+  let d = '';
+  for (const ring of rings) {
+    for (let k = 0; k < ring.strands; k++) {
+      const phase = (2 * Math.PI * k) / ring.strands;
+      let path = '';
+      for (let i = 0; i <= 480; i++) {
+        const t = (i / 480) * 2 * Math.PI;
+        const r = ring.radius + ring.swing * Math.sin(ring.waves * t + phase);
+        path += `${i ? 'L' : 'M'}${(256 + r * Math.cos(t)).toFixed(1)} ${(236 + r * Math.sin(t)).toFixed(1)}`;
+      }
+      d += `<path stroke-width="${ring.w}" d="${path}Z"/>`;
+    }
+  }
+  for (const r of [224, 130, 70]) d += `<circle stroke-width="1.8" cx="256" cy="236" r="${r}"/>`;
+  g.innerHTML = d;
+</script>
+</body></html>

@@ -211,13 +211,25 @@ async function printPlate(id, message) {
 // An IonQ run has one sheet, and it carries the upgrade's cells too.
 const actOf = (view) => (S.kind === 'remote' && view === 'upgrade' ? 'proof' : ACT_PLATES[view]);
 
-async function ensureAct(view) {
-  const act = actOf(view);
-  const todo = S.info.plates.filter((p) => p.act === act && !S.printed.has(p.id));
-  for (let i = 0; i < todo.length; i++) {
-    await printPlate(todo[i].id, `Inking plate ${i + 1} of ${todo.length} (${todo[i].qubits} qubits).`);
-  }
-  say('');
+// Plates are printed one at a time. Whatever needs stock waits its turn in this
+// line, so no plate is printed twice. The first act's plates go first and the
+// rest print behind the game while it is being played.
+let pressLine = Promise.resolve();
+const unprinted = (view) => S.info.plates.filter((p) => p.act === actOf(view) && !S.printed.has(p.id));
+
+function ensureAct(view, behind = false) {
+  if (!unprinted(view).length) return Promise.resolve();
+  const turn = pressLine.then(async () => {
+    const todo = unprinted(view);
+    for (let i = 0; i < todo.length; i++) {
+      await printPlate(todo[i].id, behind
+        ? `Printing stock for the later acts while you play: plate ${i + 1} of ${todo.length}.`
+        : `Inking plate ${i + 1} of ${todo.length} (${todo[i].qubits} qubits).`);
+    }
+    say('');
+  });
+  pressLine = turn.catch(() => {});
+  return turn;
 }
 
 function has(view) {
@@ -545,6 +557,7 @@ async function hundred(kind, render = (opts) => renderCopy(kind, opts)) {
 
 function tallyLine(kind) {
   const t = S.tally[kind];
+  if (!cellsOf(kind).length) return 'The press is inking its first plates. The buttons wake up when they are dry.';
   const perQubit = rateOver(cellsOf(kind), (code) => code === 3);
   const theoryNote = COPY[kind].perQubit() ** NOTE_QUBITS;
   let line = '';
@@ -596,7 +609,8 @@ function renderCopy(kind, { headline = '', grid = '', animate = false } = {}) {
         <p class="hint">${filterIcon('Z')} means you guess straight and ${filterIcon('X')} means diagonal. Press a switch to change it.</p>`;
     }
     if (headline) why = c.why;
-    buttons = `<button class="do" id="go">${c.button}</button>${kind === 'photocopier' ? '<button class="do quiet" id="shuffle">Guess for me</button>' : ''}<button class="do quiet" id="hundred">Run a hundred notes</button>`;
+    const idle = cellsOf(kind).length ? '' : ' disabled';
+    buttons = `<button class="do" id="go"${idle}>${c.button}</button>${kind === 'photocopier' ? '<button class="do quiet" id="shuffle">Guess for me</button>' : ''}<button class="do quiet" id="hundred"${idle}>Run a hundred notes</button>`;
   }
   // Whatever follows the reveal waits for it: the verdict after the stamp, the
   // count after the last slip.
@@ -1327,16 +1341,22 @@ function renderTicket() {
 // ---------- Navigation ----------
 
 function renderNav() {
-  const locked = S.kind === 'remote' && S.sheets.length > 0;
   $('acts').innerHTML = VIEWS.map(([id, n, title]) => {
-    const off = locked && !has(id);
+    // An IonQ backend takes one job per run, and that job is the proof sheet.
+    const off = S.kind === 'remote' && actOf(id) !== 'proof';
     return `<button data-view="${id}"${n ? '' : ' class="tool"'} aria-current="${S.view === id}"${off ? ' disabled title="This machine prints one plate per run."' : ''}>${n ? `<span class="n">${n}</span>` : ''}${title}</button>`;
   }).join('');
-  document.querySelectorAll('#acts button').forEach((b) => b.addEventListener('click', () => guard(() => show(b.dataset.view))));
+  // A tab pressed while a note is still being stamped waits for the stamp.
+  document.querySelectorAll('#acts button').forEach((b) => b.addEventListener('click', async () => {
+    for (let i = 0; i < 80 && S.busy; i++) await new Promise((resolve) => setTimeout(resolve, 50));
+    guard(() => show(b.dataset.view));
+  }));
 }
 
 async function show(view) {
   if (!(S.kind === 'remote' && has(view))) await ensureAct(view);
+  // The results pages wait for the whole stock, so no row is missing.
+  if (view === 'ledger' || view === 'ticket') await pressLine;
   S.view = view;
   renderNav();
 
@@ -1414,27 +1434,38 @@ await guard(async () => {
     S.info = await call('describe_named', name, hint);
   }
   S.kind = S.info.kind;
-  $('machine').textContent = `Machine: ${S.info.backend}`;
+  const first = S.kind === 'remote' ? 'press' : 'photocopier';
+  $('machine').textContent = S.kind === 'remote'
+    ? `Machine: ${S.info.backend}. It takes one job per run, so acts one and three need the built-in simulator.`
+    : `Machine: ${S.info.backend}`;
+  // Show the first act at once. Its buttons wake up when its plates are printed.
+  S.view = first;
   newNote();
   renderNav();
-  // Print what the first acts need while the run is starting. An IonQ backend
-  // takes one job per run, so there the one job is the proof sheet.
-  if (S.kind === 'remote') {
-    $('machine').textContent = `Machine: ${S.info.backend}. It takes one job per run, so acts one and three need the built-in simulator.`;
-    await ensureAct('press');
-  } else {
-    await ensureAct('press');
-    await ensureAct('photocopier');
-    await ensureAct('upgrade');
-    if (S.kind === 'local') await ensureAct('patient');
-  }
-  const rows = report();
-  try {
-    const sent = await call('export_evidence', JSON.stringify(evidence(rows), null, 1));
-    if (sent.sent) console.log('The evidence file for this run is in the console.');
-  } catch { /* the Results tab can still save it */ }
-  await show(S.kind === 'remote' ? 'press' : 'photocopier');
+  renderCopy(first);
+  await ensureAct(first);
+  // An IonQ sheet holds a few states for each machine, so its note is redrawn from those.
+  if (S.kind === 'remote') newNote();
+  await show(first);
 });
+
+// The rest of the stock prints behind the game. When it is all in, the run's
+// results go to the console and the evidence file is offered there.
+const stocked = (async () => {
+  if (!S.info || !S.printed.size) return;
+  try {
+    if (S.kind !== 'remote') {
+      for (const view of ['press', 'upgrade', ...(S.kind === 'local' ? ['patient'] : [])]) await ensureAct(view, true);
+    }
+    const rows = report();
+    try {
+      const sent = await call('export_evidence', JSON.stringify(evidence(rows), null, 1));
+      if (sent.sent) console.log('The evidence file for this run is in the console.');
+    } catch { /* the Results tab can still save it */ }
+  } catch (err) {
+    say(`${err?.message ?? err} This page never invents results to fill a gap.`, true);
+  }
+})();
 
 // A self-check for forks and for testing on a new machine. Switched on, it
 // presses every control in turn after loading and writes what happened to the
@@ -1479,7 +1510,7 @@ async function selfCheck() {
   console.log(`SELFCHECK done: ${ok} ok, ${failed} failed.`);
 }
 
-if (SELF_CHECK) await selfCheck();
+if (SELF_CHECK) { await stocked; await selfCheck(); }
 
 // Qollab ends a run when this file finishes, and the page stops responding
 // with it. Waiting here keeps the game live until Stop is pressed.

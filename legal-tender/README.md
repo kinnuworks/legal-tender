@@ -1,38 +1,49 @@
 # Legal Tender
 
-A banknote you can't photocopy. Go on, try.
+[Demo video](ADD YOUR PUBLIC VIDEO LINK HERE) | [Source on GitHub](https://github.com/kinnuworks/legal-tender) | [The proof](#the-proof-on-the-page) | [Results](#results) | MIT licence
 
-This effort is supported by Qollab & IonQ.
+**A banknote you can't photocopy. Go on, try.** You get three ways to forge a note whose serial number is eight qubits. Then you change sides and redesign the note. Every note, forgery and teller check is a Qiskit circuit run on the machine you pick, and as the page loads it proves that no forging machine of any kind could beat the ones it runs.
 
-Demo video: ADD YOUR PUBLIC VIDEO LINK HERE
+**On a real IonQ Forte 1:** one 22-qubit job put the best possible forger at 74.0% per qubit against the textbook note and 65.2% against our six-way note. The proven limits are 75% and 66.7%. The gap between the two notes is 8.8 points, more than four standard errors, and seven simulators agree with it.
 
-Theme: Quantum Playground. Licence: MIT.
+![A forged quantum banknote on the bank's counter. The teller has opened its eight seals and stamped it FORGED.](https://raw.githubusercontent.com/kinnuworks/legal-tender/main/docs/cover.png)
 
-Source, tests and saved runs: https://github.com/kinnuworks/legal-tender
+This effort is supported by Qollab & IonQ. Theme: Quantum Playground.
 
-Legal Tender is a forgery game with a proof inside it. The bank prints a note whose serial number is eight qubits. You get three ways to turn that one note into two, and then you change sides and redesign the note. Every note, forgery and teller check is a Qiskit circuit run on the machine you pick.
+## Try it in 60 seconds
 
-Four things set it apart.
+1. Press **Run Project** and pick the **Built-in simulator**. It is free. Act one is on screen as soon as the runtime has loaded, and the rest of the circuits print behind it while you play.
+2. Press **Run the photocopier**. The teller opens the note's eight seals one by one and stamps your two notes ACCEPTED or FORGED.
+3. Press **Run a hundred notes** and count how few get through.
 
-- The page proves its own limits. When it loads it works out the most any forging machine could ever score, and the exact score of each circuit it runs. The two agree to twelve decimal places, so each circuit is the best machine there can be. Nothing is taken from a paper on trust.
-- It runs three optimal copying machines as circuits, each matched to its limit: 75%, 85.4% and 66.7% (83.3% for a single copy).
-- It was measured on eight machines on Qollab, one of them a real IonQ Forte 1 quantum computer, with a 95% interval on every number.
-- It ends in a design rule for real hardware. A six-way note needs a machine whose genuine qubits pass 83.3% of the time. The textbook four-way note needs 85.4%, and on any machine its safe tickets are 12 to 39% longer.
+That is the idea in one minute: to copy a qubit you have to read it, and reading it the wrong way destroys it.
 
-## Run it
+## For a judge with three minutes
 
-1. Press **Run Project** and pick the **Built-in simulator**. It is free and loads in about half a minute.
-2. Act one opens with a banknote. Your job is to turn it into two notes that both get past the teller. Guess how each of its eight sealed qubits is set, using the switches under the note, then press **Run the photocopier**. The teller opens the seals one by one and stamps the notes ACCEPTED or FORGED. **Run a hundred notes** shows how rarely it works.
-3. Act two is the best copier physics allows. Pull the lever and watch it fail nine times in ten.
-4. Act three is the heist. Press **Start the heist** and the forger reads the note seal by seal. One failed check and the note is seized. If all eight seals are read, the forger prints copies the teller accepts.
-5. Act four puts you in charge of the bank. Switch the note from four ways to six and let the forger at it again.
-6. Open **Results** for every measured number and **What it's for** for the ticket calculator.
+1. **Act two**, Pull the lever. This is the best copying machine physics allows, and it fails nine times in ten. The line beside it is the proof: the limit for every possible machine and this circuit's exact score, both 75.0000%.
+2. **Act three**, Start the heist, with 12 visits. This attack works. The forger reads the whole note without the teller noticing and prints copies that pass.
+3. **Act four**, Six ways, then Let the forger at it. You run the bank now. Scroll down for both notes against both tellers, measured on your machine, and the proof for all four cases.
+4. **What it's for**, type 0.97 and press Work it out. A safe ticket needs 288 qubits with the textbook note and 224 with ours.
+5. **Results** has every number with its interval. The console has the same numbers on one line, the proof, and an evidence file.
 
 Move the pointer across a note and its colour-shifting ink changes, as it does on a real one.
 
+## How it meets the four criteria
+
+| Criterion | What to look at |
+|---|---|
+| Novelty and creativity | We found no other quantum money project on Qollab. You forge the note, then you defend it. The page proves its own limits where other projects cite them. |
+| Technical execution | Three optimal copying machines and an adaptive attack, each an explicit circuit. Limit and circuit agree to twelve decimal places. 123 tests. Eight machines, one of them a real IonQ Forte 1, with a 95% interval on every number. |
+| Impact potential | A design rule for quantum tickets on real hardware: a six-way note works on machines the textbook note can't use, and is 12 to 39% shorter everywhere else. It also fits a 20-minute class. |
+| Documentation quality | This page gives the derivations, the full proof in three lines, the limits we know of, and the files behind every number. |
+
+## Running it on other machines
+
 Use a recent Chrome, Edge, Brave or Opera, or Firefox 153 or later.
 
-On an IonQ simulator Qollab allows one job per run. The page spends it on one 22-qubit sheet that samples every machine in the project, then opens acts two and four. Acts one and three need a local simulator.
+On an IonQ simulator Qollab allows one job per run. The page spends it on one 22-qubit sheet that samples every machine in the project, then opens acts two and four. Acts one and three need a local simulator. IonQ's cloud simulates every shot on its own, so that job takes from half a minute to a few minutes.
+
+On a real IonQ machine the page sends the same sheet with 400 shots. Ours waited 26 minutes in the queue and cost 25.79 credits, although Qollab had quoted 0.00.
 
 Every run writes its results and the proof to the console and leaves an evidence file there. The game stays live until you press **Stop**.
 
