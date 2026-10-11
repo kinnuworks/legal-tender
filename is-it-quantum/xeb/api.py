@@ -49,6 +49,7 @@ def describe(backend, force_kind=""):
         "shots": _shots(backend, kind),
         "qubits": circuits.QUBITS,
         "circuits": [circuits.describe(seed) for seed in circuits.SEEDS],
+        "sweep": {"depths": list(circuits.SWEEP_DEPTHS), "circuits": len(circuits.SWEEP_SEEDS)},
     })
 
 
@@ -108,6 +109,24 @@ def sample(backend, kind, shots):
     except Exception as err:  # the page shows the message; it never invents answers
         out = {"ok": False, "error": f"{type(err).__name__}: {err}"}
     return json.dumps(out)
+
+
+def sweep_point(backend, depth, shots):
+    """Score the selected backend on circuits of one depth, for the decay sweep."""
+    try:
+        scores = []
+        for seed in circuits.SWEEP_SEEDS:
+            answers = _answers(_counts(backend, circuits.single(seed, int(depth)), int(shots)))
+            scores.append(scoring.score(circuits.fingerprint(circuits.build(seed, depth=int(depth))), answers))
+        out = {"ok": True, "depth": int(depth), **scoring.combine(scores)}
+    except Exception as err:
+        out = {"ok": False, "error": f"{type(err).__name__}: {err}"}
+    return json.dumps(out)
+
+
+def sweep_fit(points_json):
+    """Fit the decay curve through the points the page has collected."""
+    return json.dumps(scoring.decay(json.loads(str(points_json))))
 
 
 def fakers(shots):

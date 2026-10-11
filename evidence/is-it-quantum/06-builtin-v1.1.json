@@ -1,0 +1,72 @@
+{
+ "project": "Is it quantum?",
+ "label": "Built-in simulator (Qollab)",
+ "version": "1.1.0",
+ "saved_at": "2026-10-11T17:31:47+00:00",
+ "source": "The RESULTS and DECAY lines this run wrote to Qollab's console.",
+ "results": {
+  "backend": "basic_simulator",
+  "mode": "local",
+  "shots": 1024,
+  "score": 1.0217879440834932,
+  "se": 0.018065350378453523,
+  "n": 4096,
+  "circuits": [
+   [
+    1.0063,
+    0.0352
+   ],
+   [
+    1.0079,
+    0.0352
+   ],
+   [
+    1.0082,
+    0.0387
+   ],
+   [
+    1.0648,
+    0.0353
+   ]
+  ]
+ },
+ "decay": {
+  "backend": "basic_simulator",
+  "shots": 1024,
+  "points": [
+   [
+    1,
+    0.9653,
+    0.0213
+   ],
+   [
+    2,
+    0.9995,
+    0.0211
+   ],
+   [
+    4,
+    0.9837,
+    0.0292
+   ],
+   [
+    6,
+    0.973,
+    0.0283
+   ],
+   [
+    8,
+    1.0132,
+    0.0272
+   ],
+   [
+    12,
+    1.0127,
+    0.0282
+   ]
+  ],
+  "keep": 1.0033,
+  "keep_lo": 0.9979,
+  "keep_hi": 1.0088
+ }
+}

@@ -1,0 +1,33 @@
+{
+ "project": "Is it quantum?",
+ "label": "IonQ Aria 1 noise model (Qollab)",
+ "version": "1.1.0",
+ "saved_at": "2026-10-11T17:31:47+00:00",
+ "source": "The RESULTS and DECAY lines this run wrote to Qollab's console.",
+ "results": {
+  "backend": "ionq_simulator",
+  "mode": "remote",
+  "shots": 512,
+  "score": 0.8484001390169182,
+  "se": 0.0254828560328394,
+  "n": 2048,
+  "circuits": [
+   [
+    0.7958,
+    0.05
+   ],
+   [
+    0.8538,
+    0.0505
+   ],
+   [
+    0.9082,
+    0.0535
+   ],
+   [
+    0.8358,
+    0.0497
+   ]
+  ]
+ }
+}

@@ -80,3 +80,27 @@ def test_faker_report():
     assert abs(report["coin"]["combined"]["score"]) < 0.1
     assert report["peeker"]["combined"]["score"] > 1.0
     assert report["peeker"]["combined"]["score"] == pytest.approx(report["peeker"]["expected"])
+
+
+def test_the_decay_fit_recovers_a_known_rate():
+    points = [{"depth": d, "score": 0.97 * 0.95 ** d, "se": 0.01} for d in (1, 2, 4, 6, 8, 12)]
+    fit = score.decay(points)
+    assert fit["ok"]
+    assert abs(fit["keep"] - 0.95) < 1e-9
+    assert abs(fit["start"] - 0.97) < 1e-9
+    assert fit["keep_lo"] < 0.95 < fit["keep_hi"]
+    assert abs(fit["error"] - 0.05) < 1e-9
+
+
+def test_the_decay_fit_refuses_too_few_points():
+    assert not score.decay([{"depth": 1, "score": 0.9, "se": 0.01}, {"depth": 2, "score": 0.0, "se": 0.01}])["ok"]
+
+
+def test_an_ideal_simulator_shows_no_decay():
+    from qiskit.providers.basic_provider import BasicSimulator
+    backend = BasicSimulator()
+    points = [json.loads(api.sweep_point(backend, d, 1024)) for d in circuits.SWEEP_DEPTHS]
+    assert all(p["ok"] for p in points)
+    fit = json.loads(api.sweep_fit(json.dumps(points)))
+    assert fit["ok"]
+    assert fit["error_lo"] < 0 < fit["error_hi"] or abs(fit["error"]) < 0.02

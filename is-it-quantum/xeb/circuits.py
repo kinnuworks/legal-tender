@@ -17,6 +17,9 @@ from qiskit.quantum_info import Statevector
 QUBITS = 5
 DEPTH = 5
 SEEDS = (1970, 1983, 2019, 2024)
+# The decay sweep: the same kind of circuit at these numbers of layers.
+SWEEP_DEPTHS = (1, 2, 4, 6, 8, 12)
+SWEEP_SEEDS = (1970, 2019)
 
 
 def build(seed, qubits=QUBITS, depth=DEPTH):
@@ -66,8 +69,8 @@ def wide(seeds):
     return qc
 
 
-def single(seed):
+def single(seed, depth=DEPTH):
     qc = QuantumCircuit(QUBITS, QUBITS)
-    qc.compose(build(seed), inplace=True)
+    qc.compose(build(seed, depth=depth), inplace=True)
     qc.measure(range(QUBITS), range(QUBITS))
     return qc

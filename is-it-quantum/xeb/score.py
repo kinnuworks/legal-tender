@@ -11,7 +11,7 @@ The division makes a perfect sampler score exactly 1 on any circuit, including
 small ones whose fingerprints are not yet fully random.
 """
 
-from math import sqrt
+from math import exp, log, sqrt
 
 
 def _scale(fingerprint):
@@ -81,3 +81,38 @@ def fake(fingerprint, faker, shots, rng):
         ones = [sum(p for i, p in enumerate(fingerprint) if (i >> q) & 1) for q in range(qubits)]
         return [sum((1 << q) for q in range(qubits) if rng.random() < ones[q]) for _ in range(shots)]
     raise ValueError(f"unknown faker {faker!r}")
+
+
+def decay(points):
+    """Fit score = A * f^depth and return f, the share of the score a layer keeps.
+
+    points is a list of {"depth", "score", "se"}. The fit is a weighted straight
+    line through log(score) against depth, each point weighted by how well it is
+    known. A soaks up errors in preparing and reading the qubits, which is why
+    the slope measures the gates alone. Points whose score is not clearly above
+    zero carry no usable logarithm and are left out.
+    """
+    used = [q for q in points if q["score"] > 0.05 and q["se"] > 0 and q["score"] > 2 * q["se"]]
+    if len({q["depth"] for q in used}) < 3:
+        return {"ok": False, "used": len(used)}
+    w = [(q["score"] / q["se"]) ** 2 for q in used]
+    x = [float(q["depth"]) for q in used]
+    y = [log(q["score"]) for q in used]
+    total = sum(w)
+    xbar = sum(a * b for a, b in zip(w, x)) / total
+    ybar = sum(a * b for a, b in zip(w, y)) / total
+    spread = sum(a * (b - xbar) ** 2 for a, b in zip(w, x))
+    slope = sum(a * (b - xbar) * (c - ybar) for a, b, c in zip(w, x, y)) / spread
+    se = sqrt(1.0 / spread)
+    keep = exp(slope)
+    return {
+        "ok": True,
+        "used": len(used),
+        "keep": keep,
+        "keep_lo": exp(slope - 1.96 * se),
+        "keep_hi": exp(slope + 1.96 * se),
+        "start": exp(ybar - slope * xbar),
+        "error": 1.0 - keep,
+        "error_lo": 1.0 - exp(slope + 1.96 * se),
+        "error_hi": 1.0 - exp(slope - 1.96 * se),
+    }

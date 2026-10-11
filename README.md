@@ -18,7 +18,7 @@ The full write-up, with results, the proof and derivations, is in [legal-tender/
 |---|---|
 | `legal-tender/` | The Qollab project: page, styles, Python package, licence and write-up |
 | `is-it-quantum/` | A second, smaller project: tell a real quantum machine from three fakers with the cross-entropy test |
-| `tests/` | 149 tests. 123 check Legal Tender's circuits, limits and proof against exact theory |
+| `tests/` | 152 tests. 123 check Legal Tender's circuits, limits and proof against exact theory, and 29 check the second project's score, fakers and fit |
 | `dev/` | A local preview that stands in for Qollab's browser runtime |
 | `tools/` | Packaging, the results-table builder, the heist statistics and the cover picture script |
 | `evidence/` | One saved run per machine, the source of the results tables. Version 1 runs are in `evidence/v1` |

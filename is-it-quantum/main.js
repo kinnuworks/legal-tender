@@ -8,6 +8,7 @@ const VIEWS = [
   ['lineup', '1', 'The line-up'],
   ['print', '2', 'The fingerprint'],
   ['cheats', '3', 'The cheats'],
+  ['decay', '4', 'The decay'],
   ['results', '', 'Results'],
   ['why', '', "What it's for"],
 ];
@@ -27,6 +28,7 @@ const S = {
   guesses: { tries: 0, right: 0 },
   cursor: [],      // how many real answers each circuit has dealt so far
   print: { circuit: 0, shown: 50, realIsA: true, unmasked: false },
+  sweep: { points: [], fit: null, state: 'idle', error: '' },   // the decay sweep, run behind the page
   busy: false,
 };
 
@@ -114,6 +116,14 @@ function meter(s, label) {
 
 // ---------- 1. The line-up ----------
 
+// How many pairs of answers in a stream are the same answer twice.
+function repeats(answers) {
+  const seen = new Map();
+  let pairs = 0;
+  for (const x of answers) { pairs += seen.get(x) ?? 0; seen.set(x, (seen.get(x) ?? 0) + 1); }
+  return pairs;
+}
+
 function deal() {
   const circuit = pick(S.info.circuits.length);
   const start = S.cursor[circuit];
@@ -135,22 +145,25 @@ function renderLineup() {
   if (done) {
     verdict = right ? 'Right. That was the real machine.' : 'Wrong. That was the faker.';
     const g = S.guesses;
-    why = `You've picked the real one ${g.right} ${g.right === 1 ? 'time' : 'times'} in ${g.tries}. Guessing blind gets it right half the time, and nobody does much better by eye: both streams look like noise. The difference is in which answers come up more often, and for that you need the circuit's fingerprint.`;
+    const mine = repeats(L.realIsA ? L.a : L.b);
+    const theirs = repeats(L.realIsA ? L.b : L.a);
+    why = `You've picked the real one ${g.right} ${g.right === 1 ? 'time' : 'times'} in ${g.tries}. Both streams look like noise, and a blind guess is right half the time. There is one trick at this size: count repeats. The real machine favours some answers, so it repeats itself more. Here it gave ${mine} matching ${mine === 1 ? 'pair' : 'pairs'} and the faker ${theirs}. Across many deals that is about 20 against 9. At 53 qubits there are nine million billion possible answers and none ever repeats, so the trick is gone and only the circuit's fingerprint can tell them apart.`;
   }
+  const head = (isA, name, id) => `<div class="who"><h3>${name}</h3>${done ? tag(isA) : `<button class="do small" id="${id}">${name.slice(-1)} is the real one</button>`}</div>`;
   $('stage').innerHTML = `<header class="brief">
       <h2>The line-up</h2>
-      <p class="goal">Your job: pick the real quantum computer. Each machine below gave 24 answers to the same random circuit.</p>
+      <div class="lead">
+        ${done
+    ? `<p class="verdict pop">${verdict}</p><div class="row"><button class="do" id="again">Deal another pair</button><button class="do quiet" id="next">Show me the fingerprint</button></div>`
+    : '<p class="goal">Your job: pick the real quantum computer. Each machine gave 24 answers to the same random circuit.</p>'}
+      </div>
     </header>
     <div class="pair">
-      <section class="suspect${done && L.realIsA ? ' real' : ''}"><h3>Machine A</h3>${stream(L.a, 'Machine A')}${tag(true)}</section>
-      <section class="suspect${done && !L.realIsA ? ' real' : ''}"><h3>Machine B</h3>${stream(L.b, 'Machine B')}${tag(false)}</section>
+      <section class="suspect${done && L.realIsA ? ' real' : ''}">${head(true, 'Machine A', 'pick-a')}${stream(L.a, 'Machine A')}</section>
+      <section class="suspect${done && !L.realIsA ? ' real' : ''}">${head(false, 'Machine B', 'pick-b')}${stream(L.b, 'Machine B')}</section>
     </div>
     <p class="hint">Each answer is five bits. A filled square is a 1.</p>
-    <p class="verdict${done ? ' pop' : ''}">${verdict}</p>
-    <p class="why${done ? ' pop' : ''}">${why}</p>
-    <div class="row">${done
-      ? '<button class="do" id="again">Deal another pair</button><button class="do quiet" id="next">Show me the fingerprint</button>'
-      : '<button class="do" id="pick-a">A is the real one</button><button class="do" id="pick-b">B is the real one</button>'}</div>`;
+    <p class="why${done ? ' pop' : ''}">${why}</p>`;
   const guess = (side) => {
     L.guess = side;
     S.guesses.tries++;
@@ -182,25 +195,28 @@ function renderPrint() {
   let verdict = '';
   if (P.unmasked) verdict = 'The machine whose dots fill the rings is the real one. The faker spreads its answers evenly and ignores the rings.';
   else if (apart) verdict = `After ${num(shown)} answers the scores have pulled apart. One machine is following the fingerprint.`;
+  const who = (name, sc) => `<div class="who"><h3>${name}</h3><p class="meter"><b>${fixed(sc.score)}</b> <span class="hint">± ${fixed(1.96 * sc.se)}</span></p></div>`;
+  const bar = (sc) => `<div class="bar" aria-hidden="true"><span style="width:${(Math.max(0, Math.min(1, sc.score)) * 100).toFixed(0)}%"></span></div>`;
   $('stage').innerHTML = `<header class="brief">
       <h2>The fingerprint</h2>
-      <p class="goal">A random circuit favours some answers over others. That pattern is its fingerprint, and only a machine that ran the circuit can follow it.</p>
+      <p class="${verdict ? 'verdict' : 'goal'}">${verdict || 'A random circuit favours some answers over others. Only a machine that ran the circuit can follow that pattern.'}</p>
+      <div class="lead">
+        <div class="row choice" role="group" aria-label="Circuit"><span class="label">Circuit</span>${S.info.circuits.map((c, i) => `<button data-c="${i}" aria-pressed="${i === P.circuit}">${i + 1}</button>`).join('')}</div>
+        <div class="row">
+          <button class="do" id="more"${shown >= limit ? ' disabled' : ''}>Take 50 more answers</button>
+          <button class="do quiet" id="all"${shown >= limit ? ' disabled' : ''}>Take them all</button>
+          <button class="do quiet" id="unmask"${P.unmasked ? ' disabled' : ''}>Unmask them</button>
+        </div>
+      </div>
     </header>
-    <div class="row choice" role="group" aria-label="Circuit"><span class="label">Circuit</span>${S.info.circuits.map((c, i) => `<button data-c="${i}" aria-pressed="${i === P.circuit}">${i + 1}</button>`).join('')}</div>
-    <div class="print-plate">${plate(fp, null, `Fingerprint of circuit ${P.circuit + 1}: 32 possible answers, likeliest first. The likeliest comes up ${(100 * Math.max(...fp)).toFixed(0)}% of the time.`)}
-      <p class="caption">The fingerprint of circuit ${P.circuit + 1}, worked out by simulating it. Each cell is one of the 32 possible answers, likeliest first. A bigger dot is a likelier answer.</p></div>
-    <div class="pair">
-      <section class="suspect${P.unmasked && P.realIsA ? ' real' : ''}"><h3>Machine A</h3>${plate(fp, a, `Machine A's ${shown} answers against the fingerprint`)}${meter(sa, 'score')}${tag(true)}</section>
-      <section class="suspect${P.unmasked && !P.realIsA ? ' real' : ''}"><h3>Machine B</h3>${plate(fp, b, `Machine B's ${shown} answers against the fingerprint`)}${meter(sb, 'score')}${tag(false)}</section>
+    <div class="trio">
+      <section class="suspect ref"><div class="who"><h3>The fingerprint</h3><p class="hint">circuit ${P.circuit + 1}</p></div>${plate(fp, null, `Fingerprint of circuit ${P.circuit + 1}: 32 possible answers, likeliest first. The likeliest comes up ${(100 * Math.max(...fp)).toFixed(0)}% of the time.`)}
+        <p class="caption">Worked out by simulating the circuit. Each cell is one of the 32 possible answers, likeliest first. A bigger dot is a likelier answer.</p></section>
+      <section class="suspect${P.unmasked && P.realIsA ? ' real' : ''}">${who('Machine A', sa)}${plate(fp, a, `Machine A's ${shown} answers against the fingerprint`)}${bar(sa)}${tag(true)}</section>
+      <section class="suspect${P.unmasked && !P.realIsA ? ' real' : ''}">${who('Machine B', sb)}${plate(fp, b, `Machine B's ${shown} answers against the fingerprint`)}${bar(sb)}${tag(false)}</section>
     </div>
-    <p class="hint">Rings show the fingerprint. Dots show how often each machine gave that answer. A score of 1 means the answers follow the fingerprint, and 0 means they ignore it.</p>
-    <p class="verdict">${verdict}</p>
-    <div class="row">
-      <button class="do" id="more"${shown >= limit ? ' disabled' : ''}>Take 50 more answers</button>
-      <button class="do quiet" id="all"${shown >= limit ? ' disabled' : ''}>Take them all</button>
-      <button class="do quiet" id="unmask"${P.unmasked ? ' disabled' : ''}>Unmask them</button>
-    </div>
-    <p class="tally">${num(shown)} of ${num(limit)} answers from each machine. The score is the average, over a machine's answers, of how likely the fingerprint says each answer is, rescaled so a perfect machine gets 1.</p>`;
+    <p class="hint">Rings show the fingerprint. Dots show how often each machine gave that answer. The number is the score: 1 means the answers follow the fingerprint, and 0 means they ignore it.</p>
+    <p class="tally">${num(shown)} of ${num(limit)} answers from each machine. The score is the average, over a machine's answers, of how likely the fingerprint says each answer is, rescaled so a perfect machine gets 1. The ± is a 95% interval.</p>`;
   document.querySelectorAll('.choice button').forEach((btn) => btn.addEventListener('click', () => {
     S.print = { circuit: Number(btn.dataset.c), shown: 50, realIsA: pick(2) === 0, unmasked: false };
     renderPrint();
@@ -239,9 +255,95 @@ function renderCheats() {
     </div>
     <section class="below">
       <h3>Why the peeker wins, and why it doesn't matter</h3>
-      <p>The peeker scores ${fixed(peek)}, well above the real machine's ${fixed(real.score)}. It can do that only because it worked out the fingerprint first. For these five-qubit circuits that means tracking 32 numbers, which any laptop does instantly.</p>
-      <p>Every extra qubit doubles the work. At around 50 qubits the fingerprint takes a supercomputer, and beyond that nobody can work it out at all. That is the point of the test: past that size the only way to follow the fingerprint is to be a quantum computer.</p>
+      <p>The peeker scores ${fixed(peek)}, well above the real machine's ${fixed(real.score)}. It can do that only because it worked out the fingerprint first. For these five-qubit circuits that means tracking 32 numbers, which any laptop does instantly. It is also easy to catch by other means, because it gives the same answer every time. The score alone does not catch it, and that is the lesson: one number can be gamed.</p>
+      <p>The mimic's ${fixed(S.fake.mimic.combined.score)} is a small-circuit effect. It copies how often each bit is 1 and nothing about how the bits go together, and on larger circuits that earns a score close to 0.</p>
+      <p>With the plainest way of simulating a circuit, every extra qubit doubles the work. Cleverer methods do better, and they have cut early estimates of "thousands of years" for a 53-qubit circuit down to hours or days. Past some size no known method keeps up, and that is the bet behind the test.</p>
       <p>The same wall stands in front of the examiner. If nobody can compute the fingerprint, nobody can mark the answers either, so the largest claims are checked on smaller or simplified circuits and extended by argument. This is the honest weak spot in every quantum supremacy result, and the reason the claims are still argued over.</p>
+    </section>`;
+}
+
+// ---------- 4. The decay ----------
+
+async function runSweep() {
+  const W = S.sweep;
+  if (W.state !== 'idle' || S.info.kind === 'remote') return;
+  W.state = 'running';
+  try {
+    for (const depth of S.info.sweep.depths) {
+      const point = await call('sweep_point', BACKEND, depth, S.info.shots);
+      if (!point.ok) throw new Error(point.error);
+      W.points.push(point);
+      if (S.view === 'decay') renderDecay();
+    }
+    W.fit = await call('sweep_fit', JSON.stringify(W.points));
+    W.state = 'done';
+    const f = W.fit;
+    console.log(`DECAY ${JSON.stringify({ backend: S.info.backend, shots: S.info.shots, points: W.points.map((q) => [q.depth, Number(q.score.toFixed(4)), Number(q.se.toFixed(4))]), keep: f.ok ? Number(f.keep.toFixed(4)) : null, keep_lo: f.ok ? Number(f.keep_lo.toFixed(4)) : null, keep_hi: f.ok ? Number(f.keep_hi.toFixed(4)) : null })}`);
+  } catch (err) {
+    W.state = 'failed';
+    W.error = String(err?.message ?? err);
+  }
+  if (S.view === 'decay') renderDecay();
+}
+
+function decayChart() {
+  const W = S.sweep;
+  const depths = S.info.sweep.depths;
+  const top = depths[depths.length - 1];
+  const X = (d) => 56 + (d / top) * 560;
+  const Y = (v) => 226 - Math.max(-0.05, Math.min(1.15, v)) * 180;
+  let marks = '';
+  for (const v of [0, 0.5, 1]) marks += `<line class="grid" x1="56" x2="616" y1="${Y(v)}" y2="${Y(v)}"/><text class="tick" x="48" y="${Y(v) + 4}" text-anchor="end">${v}</text>`;
+  for (const d of depths) marks += `<text class="tick" x="${X(d)}" y="248" text-anchor="middle">${d}</text>`;
+  let curve = '';
+  if (W.fit?.ok) {
+    const pts = [];
+    for (let d = 0; d <= top; d += top / 48) pts.push(`${X(d).toFixed(1)},${Y(W.fit.start * W.fit.keep ** d).toFixed(1)}`);
+    curve = `<polyline class="fitline" points="${pts.join(' ')}"/>`;
+  }
+  const dots = W.points.map((q) => `<line class="whisker" x1="${X(q.depth)}" x2="${X(q.depth)}" y1="${Y(q.score + 1.96 * q.se)}" y2="${Y(q.score - 1.96 * q.se)}"/><circle class="point" cx="${X(q.depth)}" cy="${Y(q.score)}" r="4.5"/>`).join('');
+  const said = W.points.map((q) => `${q.depth} layers: ${fixed(q.score)}`).join('; ');
+  return `<svg class="chart" viewBox="0 0 640 268" role="img" aria-label="Score against the number of layers. ${said || 'No points yet.'}">${marks}${curve}${dots}
+    <text class="tick" x="336" y="264" text-anchor="middle">layers of gates in the circuit</text></svg>`;
+}
+
+function renderDecay() {
+  const W = S.sweep;
+  const pc = (x) => `${fixed(100 * x, 1)}%`;
+  let headline;
+  let detail = '';
+  if (S.info.kind === 'remote') {
+    headline = 'This step needs six jobs, and an IonQ backend on Qollab takes one job per run. Run the project on a local simulator to see it.';
+  } else if (W.state === 'failed') {
+    headline = `The sweep stopped: ${W.error}`;
+  } else if (W.state !== 'done') {
+    headline = `Running circuits of ${S.info.sweep.depths.join(', ')} layers on ${S.info.backend}: ${W.points.length} of ${S.info.sweep.depths.length} done.`;
+  } else if (!W.fit.ok) {
+    headline = 'Too few of the scores were clearly above zero to fit a curve. This machine loses the fingerprint within a few layers.';
+  } else {
+    const f = W.fit;
+    const flat = f.error_lo <= 0;
+    headline = flat
+      ? `No decay to measure: each layer keeps ${pc(f.keep)} of the score (${pc(f.keep_lo)} to ${pc(f.keep_hi)}). This machine has no noise that the test can see.`
+      : `Each layer of gates keeps ${pc(f.keep)} of the score (${pc(f.keep_lo)} to ${pc(f.keep_hi)}). That is an error of ${pc(f.error)} per layer on ${S.info.backend}.`;
+    detail = `<p>The curve is score = ${fixed(f.start)} × ${fixed(f.keep, 3)}<sup>layers</sup>, fitted to ${f.used} points with each one weighted by how well it is known. The first number soaks up mistakes in preparing and reading the qubits, so the second measures the gates alone. A layer here is ten single-qubit turns and two CNOTs before the machine compiles it.</p>`;
+  }
+  const rows = W.points.map((q) => `<tr><td>${q.depth}</td><td class="num">${num(q.n)}</td><td class="num">${fixed(q.score)}</td><td class="num">${fixed(q.lo)} to ${fixed(q.hi)}</td></tr>`).join('');
+  $('stage').innerHTML = `<header class="brief">
+      <h2>The decay</h2>
+      <p class="goal">The test also measures a machine. Make the circuit deeper, watch the score fall, and the rate of fall is the error in each layer of gates.</p>
+    </header>
+    <div class="decay">
+      <div>${S.info.kind === 'remote' ? '' : decayChart()}</div>
+      <div>
+        <p class="verdict">${headline}</p>
+        ${detail}
+        ${rows ? `<table class="results"><thead><tr><th>Layers</th><th class="num">Answers</th><th class="num">Score</th><th class="num">95% interval</th></tr></thead><tbody>${rows}</tbody></table>` : ''}
+      </div>
+    </div>
+    <section class="below">
+      <h3>Why this is the useful part</h3>
+      <p>Nobody needs a five-qubit machine told apart from a coin. What laboratories use this test for is the number above. It needs no special circuits and no access to the machine beyond its answers, and it is how the error rates in the largest random-circuit experiments were reported. Run this project on an ideal simulator and on a noise model and compare the two curves.</p>
     </section>`;
 }
 
@@ -260,6 +362,7 @@ function evidence() {
     circuits: S.info.circuits.map((c, i) => ({ seed: c.seed, qubits: c.qubits, depth: c.depth, cnots: c.cnots, fingerprint: c.fingerprint, score: S.realRun.scores[i], answers: S.real[i] })),
     fakers: Object.fromEntries(Object.keys(FAKERS).map((k) => [k, { combined: S.fake[k].combined, expected: S.fake[k].expected }])),
     line_up_guesses: S.guesses,
+    decay: S.sweep.state === 'done' ? { points: S.sweep.points, fit: S.sweep.fit } : null,
   };
 }
 
@@ -296,13 +399,13 @@ function renderResults() {
 function renderWhy() {
   $('stage').innerHTML = `<section class="sheet">
     <h2>What it's for</h2>
-    <p>This is the test behind the biggest claims in quantum computing. In 2019 Google ran random circuits on 53 qubits and reported that its Sycamore chip followed their fingerprints, faintly but measurably, on a task it estimated would take a supercomputer thousands of years. In 2024 it repeated the test on its Willow chip with larger circuits.</p>
+    <p>This is the test behind the biggest claims in quantum computing. In 2019 Google ran random circuits on 53 qubits and reported that its Sycamore chip followed their fingerprints, faintly but measurably, on a task it estimated would take a supercomputer thousands of years. Better classical methods later cut that estimate to hours or days. In 2024 Google repeated the test on its Willow chip with larger circuits.</p>
     <p>The test is called cross-entropy benchmarking. Its appeal is that it needs nothing from the machine except answers. Its weakness is the one you saw in the cheats: someone has to compute the fingerprint, and at the sizes that matter nobody can.</p>
     <h3>Three things people use it for</h3>
     <ol class="steps">
-      <li>Comparing machines. Run the same circuits on two machines and the higher score is the one that kept its qubits in step for longer. Try this project on an IonQ noise model and an IBM one.</li>
+      <li>Comparing machines. Run the same circuits on two machines and the higher score belongs to the one whose gates and read-out made fewer mistakes. Try this project on an IonQ noise model and an IBM one.</li>
       <li>Catching a provider that cuts corners. A cloud service that quietly swaps in a cheaper machine, or returns made-up answers, scores near 0.</li>
-      <li>Tracking one machine over time. The score falls as circuits get deeper, and how fast it falls measures the error in each gate.</li>
+      <li>Measuring gate error. The score falls as circuits get deeper, and how fast it falls is the error in each layer. Step four does this on the machine you picked.</li>
     </ol>
     <h3>What this page leaves out</h3>
     <p>Five qubits is far too small to prove anything about quantum advantage: the fingerprint here is trivial to compute, which is why the peeker can cheat. The page shows how the test works, how it is fooled, and where it stops being checkable.</p>
@@ -319,7 +422,7 @@ function renderNav() {
 function show(view) {
   S.view = view;
   renderNav();
-  ({ lineup: renderLineup, print: renderPrint, cheats: renderCheats, results: renderResults, why: renderWhy })[view]();
+  ({ lineup: renderLineup, print: renderPrint, cheats: renderCheats, decay: renderDecay, results: renderResults, why: renderWhy })[view]();
 }
 
 async function guard(work) {
@@ -377,6 +480,10 @@ await guard(async () => {
   show('lineup');
 });
 
+// The decay sweep runs behind the page, one depth at a time, so step four is
+// ready by the time anyone opens it.
+const swept = S.info && S.realRun ? runSweep() : Promise.resolve();
+
 // A self-check for forks and for testing on a new machine. Switched on, it
 // presses every control in turn after loading and writes what happened to the
 // console, so a run can be checked without a mouse.
@@ -406,13 +513,14 @@ async function selfCheck() {
   await step('take them all', '#all', '#stage', /answers/);
   await step('unmask the machines', '#unmask', '#stage', /real|faker/i);
   await step('open the cheats', view('cheats'), '#stage h2', /cheats/i);
+  await step('open the decay', view('decay'), '#stage .verdict', /layer|IonQ|decay/i);
   await step('open results', view('results'), '#stage h2', /Results/i);
   await step('save the evidence', '#save', '#status', /console|box/);
   await step('open what it is for', view('why'), '#stage h2', /for/i);
   console.log(`SELFCHECK done: ${ok} ok, ${failed} failed.`);
 }
 
-if (SELF_CHECK) await selfCheck();
+if (SELF_CHECK) { await swept; await selfCheck(); }
 
 // Qollab ends a run when this file finishes, and the page stops responding
 // with it. Waiting here keeps it live until Stop is pressed.
