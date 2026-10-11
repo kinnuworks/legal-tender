@@ -1,0 +1,59 @@
+{
+ "project": "Legal Tender",
+ "version": "1.0.0",
+ "backend": "IBM Kingston noise model (Qollab)",
+ "mode": "device",
+ "saved_at": "2026-10-10T15:41:06+00:00",
+ "source": "Read from the RESULTS line each run writes to Qollab's console.",
+ "summary": [
+  {
+   "measure": "A genuine qubit passes the teller",
+   "hits": 2041,
+   "shots": 2048,
+   "rate": 0.99658203125,
+   "interval_95": [
+    0.9929612194552593,
+    0.998343372478153
+   ],
+   "theory": 1.0
+  },
+  {
+   "measure": "Photocopier: original and copy both pass",
+   "hits": 2518,
+   "shots": 4096,
+   "rate": 0.61474609375,
+   "interval_95": [
+    0.599741354381468,
+    0.6295357962284482
+   ],
+   "theory": 0.625
+  },
+  {
+   "measure": "Best press: original and copy both pass",
+   "hits": 1465,
+   "shots": 2048,
+   "rate": 0.71533203125,
+   "interval_95": [
+    0.6953989793854787,
+    0.7344587640192752
+   ],
+   "theory": 0.75
+  },
+  {
+   "measure": "Best press: one copy on its own passes",
+   "hits": 3350,
+   "shots": 4096,
+   "rate": 0.81787109375,
+   "interval_95": [
+    0.8057552885679826,
+    0.8293912009939557
+   ],
+   "theory": 0.8333333333333334
+  }
+ ],
+ "plates": [
+  {
+   "shots": 512
+  }
+ ]
+}

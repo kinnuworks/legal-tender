@@ -1,0 +1,54 @@
+{
+ "project": "Legal Tender",
+ "version": "2.0.0",
+ "label": "IBM Kingston noise model (Qollab)",
+ "saved_at": "2026-10-11T11:04:50+00:00",
+ "source": "The RESULTS line this run wrote to Qollab's console.",
+ "results": {
+  "backend": "fake_kingston",
+  "mode": "device",
+  "shots": 512,
+  "rows": [
+   {
+    "key": "honest",
+    "k": 3068,
+    "n": 3072
+   },
+   {
+    "key": "photocopier",
+    "k": 2516,
+    "n": 4096
+   },
+   {
+    "key": "press",
+    "k": 1473,
+    "n": 2048
+   },
+   {
+    "key": "single",
+    "k": 3326,
+    "n": 4096
+   },
+   {
+    "key": "lenient",
+    "k": 1393,
+    "n": 2048
+   },
+   {
+    "key": "lenient-single",
+    "k": 3374,
+    "n": 4096
+   },
+   {
+    "key": "universal",
+    "k": 2000,
+    "n": 3072
+   },
+   {
+    "key": "universal-single",
+    "k": 5038,
+    "n": 6144
+   }
+  ]
+ }
+}

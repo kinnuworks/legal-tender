@@ -1,0 +1,48 @@
+{
+ "project": "Legal Tender",
+ "version": "1.0.0",
+ "backend": "IonQ Forte Enterprise 1 noise model (Qollab)",
+ "mode": "remote",
+ "saved_at": "2026-10-10T15:41:06+00:00",
+ "source": "Read from the RESULTS line each run writes to Qollab's console.",
+ "summary": [
+  {
+   "measure": "A genuine qubit passes the teller",
+   "hits": 2048,
+   "shots": 2048,
+   "rate": 1.0,
+   "interval_95": [
+    0.9981277307176147,
+    0.9999999999999999
+   ],
+   "theory": 1.0
+  },
+  {
+   "measure": "Best press: original and copy both pass",
+   "hits": 1456,
+   "shots": 2048,
+   "rate": 0.7109375,
+   "interval_95": [
+    0.6909232571809858,
+    0.730161879215508
+   ],
+   "theory": 0.75
+  },
+  {
+   "measure": "Best press: one copy on its own passes",
+   "hits": 3298,
+   "shots": 4096,
+   "rate": 0.80517578125,
+   "interval_95": [
+    0.7927626396113803,
+    0.8170170162660566
+   ],
+   "theory": 0.8333333333333334
+  }
+ ],
+ "plates": [
+  {
+   "shots": 512
+  }
+ ]
+}

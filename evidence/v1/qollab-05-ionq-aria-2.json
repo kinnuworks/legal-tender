@@ -1,0 +1,48 @@
+{
+ "project": "Legal Tender",
+ "version": "1.0.0",
+ "backend": "IonQ Aria 2 noise model (Qollab)",
+ "mode": "remote",
+ "saved_at": "2026-10-10T15:41:06+00:00",
+ "source": "Read from the RESULTS line each run writes to Qollab's console.",
+ "summary": [
+  {
+   "measure": "A genuine qubit passes the teller",
+   "hits": 2048,
+   "shots": 2048,
+   "rate": 1.0,
+   "interval_95": [
+    0.9981277307176147,
+    0.9999999999999999
+   ],
+   "theory": 1.0
+  },
+  {
+   "measure": "Best press: original and copy both pass",
+   "hits": 1487,
+   "shots": 2048,
+   "rate": 0.72607421875,
+   "interval_95": [
+    0.7063492466297484,
+    0.7449526472396418
+   ],
+   "theory": 0.75
+  },
+  {
+   "measure": "Best press: one copy on its own passes",
+   "hits": 3366,
+   "shots": 4096,
+   "rate": 0.82177734375,
+   "interval_95": [
+    0.8097572578694429,
+    0.8331944112877266
+   ],
+   "theory": 0.8333333333333334
+  }
+ ],
+ "plates": [
+  {
+   "shots": 512
+  }
+ ]
+}

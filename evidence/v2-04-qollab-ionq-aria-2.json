@@ -1,0 +1,49 @@
+{
+ "project": "Legal Tender",
+ "version": "2.0.0",
+ "label": "IonQ Aria 2 noise model (Qollab)",
+ "saved_at": "2026-10-11T10:57:30+00:00",
+ "source": "The RESULTS line this run wrote to Qollab's console.",
+ "results": {
+  "backend": "ionq_simulator",
+  "mode": "remote",
+  "shots": 1024,
+  "rows": [
+   {
+    "key": "honest",
+    "k": 3072,
+    "n": 3072
+   },
+   {
+    "key": "press",
+    "k": 1465,
+    "n": 2048
+   },
+   {
+    "key": "single",
+    "k": 3311,
+    "n": 4096
+   },
+   {
+    "key": "lenient",
+    "k": 1454,
+    "n": 2048
+   },
+   {
+    "key": "lenient-single",
+    "k": 3447,
+    "n": 4096
+   },
+   {
+    "key": "universal",
+    "k": 1973,
+    "n": 3072
+   },
+   {
+    "key": "universal-single",
+    "k": 5013,
+    "n": 6144
+   }
+  ]
+ }
+}

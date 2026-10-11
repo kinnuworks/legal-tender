@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap');
+
+/* The project fills its frame, so the frame takes the page colour too. */
+html, body { margin: 0; background: #E8EBE6; }
+@media (prefers-color-scheme: dark) { html, body { background: #101412; } }
+
+/* A banknote lying on a bank counter. The counter and everything written on
+   it are one ink on one surface. Colour belongs to the note: the bank prints
+   in green, the teller stamps in violet, and the charts borrow those two inks
+   for what was measured and for the limits. */
+.lt {
+  --page: #E8EBE6;
+  --ink: #14211B;
+  --bank: #1C6A50;
+  --teller: #5B2D91;
+  --muted: #55625B;
+  --rule: #C6CEC7;
+  --field: #FFFFFF;
+  --face: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--face);
+  font-size: 17px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  padding: 36px 28px 44px;
+  max-width: 1120px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+@media (prefers-color-scheme: dark) {
+  .lt {
+    --page: #101412;
+    --ink: #E9EDE8;
+    --bank: #7FC3A5;
+    --teller: #BFA2F0;
+    --muted: #9AA59F;
+    --rule: #2B342F;
+    --field: #181E1B;
+  }
+}
+.lt *, .lt *::before, .lt *::after { box-sizing: border-box; }
+
+.lt h1, .lt h2, .lt h3 { margin: 0; font-stretch: 118%; letter-spacing: -0.01em; line-height: 1.08; }
+.lt h1 { font-size: 56px; font-weight: 800; font-stretch: 125%; }
+.lt h2 { font-size: 30px; font-weight: 750; margin-bottom: 12px; }
+.lt h3 { font-size: 20px; font-weight: 700; margin: 28px 0 8px; }
+.lt p { margin: 0 0 12px; max-width: 62ch; }
+.lt a { color: var(--ink); text-decoration-color: var(--teller); text-underline-offset: 3px; }
+.lt strong { font-weight: 700; }
+
+/* Masthead */
+.masthead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 32px; margin-bottom: 22px; }
+.lede { font-size: 21px; line-height: 1.3; margin: 10px 0 0; color: var(--muted); }
+.aside { display: flex; align-items: center; gap: 14px; }
+.machine { font-size: 14px; color: var(--muted); margin: 0; }
+.sound { font: 500 14px/1.3 var(--face); color: var(--muted); background: transparent; border: 1px solid var(--rule); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.sound[aria-pressed="true"] { color: var(--ink); border-color: var(--ink); }
+
+/* Acts: the three acts are a sequence, so they carry numbers. */
+.acts { display: flex; flex-wrap: wrap; gap: 4px 26px; border-bottom: 1px solid var(--rule); margin-bottom: 8px; }
+.acts button { font: 500 16px/1.3 var(--face); color: var(--muted); background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 0 11px; margin-bottom: -1px; cursor: pointer; }
+.acts button[aria-current="true"] { color: var(--ink); font-weight: 700; border-bottom-color: var(--ink); }
+.acts button:disabled { opacity: 0.45; cursor: not-allowed; }
+.acts button:not(.tool) + button.tool { margin-left: auto; }
+.acts .n { font-weight: 700; margin-right: 7px; }
+
+.status { min-height: 22px; font-size: 14px; color: var(--muted); margin: 0 0 14px; }
+.status.bad { color: var(--teller); font-weight: 600; }
+
+/* The counter: the note on the left, what you do with it on the right. */
+.counter { display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px 44px; align-items: start; }
+@media (min-width: 880px) { .counter { grid-template-columns: minmax(0, 1.45fr) minmax(280px, 1fr); } }
+.brief { margin-bottom: 20px; }
+.brief h2 { margin-bottom: 8px; }
+.brief .goal { margin: 0; max-width: 60ch; }
+.panel h3 { margin-top: 0; }
+.card, .below { max-width: 780px; }
+.below { margin-top: 12px; }
+
+.lt button.do { font: 600 16px/1.3 var(--face); color: var(--page); background: var(--ink); border: 1.5px solid var(--ink); border-radius: 10px; padding: 11px 18px; cursor: pointer; }
+.lt button.do.quiet { color: var(--ink); background: transparent; border-color: var(--rule); }
+.lt button.do:disabled { opacity: 0.45; cursor: not-allowed; }
+.lt button:focus-visible, .lt input:focus-visible, .lt textarea:focus-visible { outline: 3px solid var(--teller); outline-offset: 2px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 16px 0; }
+
+/* Banknotes. A note is paper whatever the colour scheme, so it keeps its own
+   inks and the counter changes around it. */
+.notes { display: grid; gap: 18px; }
+.note { margin: 0; }
+.note figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+.sheet {
+  --note-paper: #EEEBDD;
+  --note-ink: #123628;
+  --note-bank: #1C6A50;
+  --note-teller: #5B2D91;
+  position: relative; overflow: hidden; border-radius: 5px; background: var(--note-paper);
+  box-shadow: 0 0 0 1px rgba(18, 54, 40, 0.16), 0 1px 1px rgba(10, 20, 15, 0.22), 0 14px 22px -14px rgba(10, 20, 15, 0.5), 0 34px 44px -36px rgba(10, 20, 15, 0.55);
+}
+.inks { position: absolute; width: 0; height: 0; overflow: hidden; }
+.note svg { width: 100%; height: auto; display: block; }
+.note .line { fill: none; }
+.note .bank { stroke: var(--note-bank); }
+.note .teller { stroke: var(--note-teller); }
+.note .fill-bank { fill: var(--note-bank); }
+.note .fill-teller { fill: var(--note-teller); }
+.note .eye { fill: none; stroke: var(--note-paper); stroke-width: 1.2; }
+.note text { font-family: var(--face); fill: var(--note-bank); }
+.note .micro { font-size: 3.5px; font-weight: 600; opacity: 0.85; }
+.note .bankname { font-weight: 650; font-stretch: 125%; letter-spacing: 0.34em; fill: var(--note-ink); }
+.note .series { font-weight: 500; font-stretch: 110%; letter-spacing: 0.3em; }
+.note .sealno { fill: var(--note-ink); }
+.note .denom { font-weight: 800; font-stretch: 125%; letter-spacing: -0.01em; fill: var(--note-ink); }
+.note .legend-line { font-weight: 500; fill: var(--note-ink); }
+.note .numeral { font-weight: 900; font-stretch: 125%; }
+.note .ovi { font-weight: 900; font-stretch: 125%; }
+.note .serial { font-weight: 700; font-stretch: 78%; fill: var(--note-ink); }
+.note .verdict { font-weight: 800; font-stretch: 118%; letter-spacing: 0.12em; fill: var(--note-teller); }
+.note .stampmark { opacity: 0.92; }
+
+/* One read-direction switch under each of the note's eight seals. */
+.guess-row { display: grid; grid-template-columns: 35.6% 60% 4.4%; align-items: center; margin-top: 12px; }
+.guess-label { font-size: 15px; font-weight: 650; line-height: 1.25; margin: 0 0 8px; }
+.guess-row .guess-label { margin: 0; padding-right: 12px; }
+.guesses { display: grid; grid-template-columns: repeat(8, 1fr); }
+.guesses button { justify-self: center; width: min(44px, 92%); aspect-ratio: 1; display: grid; place-items: center; color: var(--ink); background: var(--field); border: 1.5px solid var(--rule); border-radius: 10px; cursor: pointer; padding: 0; }
+.guesses button[aria-pressed="true"] { color: var(--page); background: var(--ink); border-color: var(--ink); }
+.guesses svg, .hint svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+.hint { font-size: 14px; color: var(--muted); }
+.hint svg { width: 14px; height: 14px; vertical-align: -2px; }
+.guess-row + .hint { margin-top: 10px; }
+.heist-row { grid-template-columns: auto 1fr; gap: 14px; margin-top: 14px; }
+.heist-row .guess-label { padding-right: 0; }
+.below .row { margin: 12px 0; }
+.why { margin: 4px 0 0; color: var(--muted); }
+.why:empty { display: none; }
+.key { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+.key li { display: flex; align-items: center; gap: 9px; }
+.key svg { flex: none; width: 20px; height: 20px; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; stroke: var(--bank); }
+.key .k-bank { stroke: var(--bank); }
+.key .k-teller, .key .caught svg { stroke: var(--teller); }
+
+.goal { font-size: 19px; font-weight: 650; line-height: 1.35; }
+.steps { margin: 0 0 14px; padding: 0; list-style: none; counter-reset: step; max-width: 62ch; }
+.steps li { counter-increment: step; position: relative; padding-left: 34px; margin-bottom: 9px; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 1px; width: 23px; height: 23px; display: grid; place-items: center; font-size: 13px; font-weight: 700; color: var(--ink); border: 1.5px solid var(--ink); border-radius: 50%; }
+.guesses.shown span { justify-self: center; width: min(44px, 92%); aspect-ratio: 1; display: grid; place-items: center; color: var(--muted); border: 1.5px solid var(--rule); border-radius: 10px; }
+.guesses.shown span.wrong { color: var(--teller); border-color: var(--teller); border-style: dashed; }
+.verdict-line { font-size: 21px; font-weight: 650; line-height: 1.3; margin: 16px 0 4px; }
+.verdict-line:empty { display: none; }
+.tally { font-size: 14px; line-height: 1.55; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 12px; margin-top: 16px; }
+.tally strong { color: var(--ink); }
+
+/* A hundred attempts, one slip each. Filled slips got through. */
+.hundred { display: grid; grid-template-columns: repeat(25, 1fr); gap: 4px; margin: 16px 0 4px; }
+.hundred span { aspect-ratio: 2 / 1; border: 1.5px solid var(--rule); border-radius: 2px; }
+.hundred .yes { background: var(--bank); border-color: var(--bank); }
+
+/* The patient forger */
+.visits { display: flex; flex-wrap: wrap; gap: 8px; min-height: 44px; margin: 4px 0 8px; }
+.visits:empty::before { content: 'Each visit to the teller leaves a mark here.'; font-size: 14px; color: var(--muted); align-self: center; }
+.visit svg { width: 36px; height: 36px; display: block; fill: none; stroke: var(--bank); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.visit.caught svg { stroke: var(--teller); stroke-width: 2.2; }
+.choice { display: flex; flex-wrap: wrap; gap: 8px; }
+.choice button { font: 600 16px/1 var(--face); min-width: 46px; height: 42px; background: var(--field); color: var(--ink); border: 1.5px solid var(--rule); border-radius: 10px; cursor: pointer; }
+.choice button[aria-pressed="true"] { background: var(--ink); color: var(--page); border-color: var(--ink); }
+
+/* Tables and charts */
+.ledger { width: 100%; border-collapse: collapse; font-size: 15px; margin: 8px 0 18px; }
+.ledger caption { text-align: left; font-size: 20px; font-weight: 700; font-stretch: 118%; padding-bottom: 6px; }
+.ledger th, .ledger td { text-align: left; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.ledger th { font-weight: 600; color: var(--muted); font-size: 14px; }
+.ledger td.num, .ledger th.num { text-align: right; white-space: nowrap; padding-right: 0; padding-left: 14px; }
+.ledger td.num + td:not(.num), .ledger th.num + th:not(.num) { padding-left: 18px; }
+.chart { width: 100%; height: auto; display: block; margin: 10px 0; }
+.chart text { font-family: var(--face); font-size: 11.5px; fill: var(--muted); }
+.chart .axis { stroke: var(--ink); stroke-width: 1; fill: none; }
+.chart .grid { stroke: var(--rule); stroke-width: 1; }
+.chart .theory { stroke: var(--muted); stroke-width: 1.5; fill: none; stroke-dasharray: 4 3; }
+.chart .dot { fill: var(--bank); }
+.chart .whisk { stroke: var(--bank); stroke-width: 1.8; }
+.chart .mark { stroke: var(--teller); stroke-width: 1.5; }
+.chart .mark-text { fill: var(--teller); font-weight: 600; }
+.chart .label { fill: var(--ink); paint-order: stroke; stroke: var(--page); stroke-width: 4px; stroke-linejoin: round; }
+
+.chart .curve { stroke: var(--bank); stroke-width: 2; fill: none; }
+.chart .curve.faint { stroke: var(--muted); }
+.chart .dot.faint { fill: var(--muted); }
+.chart .here { stroke: var(--ink); stroke-width: 1.5; }
+
+/* The bank fights back: both notes against both tellers. */
+.choice.wide button { padding: 0 16px; }
+.duel th:not(:first-child), .duel td:not(:first-child) { width: 27%; padding-left: 16px; }
+.duel td { vertical-align: middle; }
+.score { display: block; font-size: 24px; font-weight: 750; font-stretch: 118%; line-height: 1.1; }
+.gauge { position: relative; display: block; height: 8px; margin: 7px 0 5px; background: var(--rule); border-radius: 4px; }
+.gauge i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--bank); border-radius: 4px; }
+.gauge b { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--teller); }
+.duel small { font-size: 13px; color: var(--muted); }
+.proofline { font-size: 15px; line-height: 1.45; border-left: 3px solid var(--teller); padding-left: 12px; margin: 16px 0 0; }
+.panes { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px 28px; margin: 18px 0 6px; }
+.pane { border-top: 3px solid var(--ink); padding-top: 10px; }
+.pane-title { font-size: 15px; font-weight: 650; margin: 0; }
+.pane .big { font-size: 36px; }
+.pane p:last-child { font-size: 15px; color: var(--muted); margin: 0; }
+
+.lt textarea { width: 100%; min-height: 150px; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace; color: var(--ink); background: var(--field); border: 1.5px solid var(--rule); border-radius: 10px; padding: 12px; }
+.lt input[type="number"] { font: 600 16px/1.3 var(--face); width: 108px; padding: 9px 10px; color: var(--ink); background: var(--field); border: 1.5px solid var(--rule); border-radius: 10px; }
+.lt label { font-weight: 600; font-size: 15px; }
+.big { font-size: 48px; line-height: 1.05; font-weight: 800; font-stretch: 125%; margin: 6px 0 10px; }
+
+.colophon { border-top: 1px solid var(--rule); margin-top: 40px; padding-top: 14px; font-size: 14px; color: var(--muted); }
+.colophon p { margin: 0; max-width: none; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (max-width: 620px) {
+  .lt { padding: 24px 16px 32px; font-size: 16px; }
+  .lt h1 { font-size: 38px; }
+  .lt h2 { font-size: 25px; }
+  .lede { font-size: 18px; }
+  .acts { gap: 2px 18px; }
+  .acts button:not(.tool) + button.tool { margin-left: 0; }
+  .guesses svg { width: 15px; height: 15px; }
+  .hundred { grid-template-columns: repeat(20, 1fr); }
+  /* A wide table scrolls inside its own frame, so the page never moves sideways. */
+  .ledger { display: block; overflow-x: auto; font-size: 14px; }
+  .duel { display: table; }
+  .duel th:not(:first-child), .duel td:not(:first-child) { padding-left: 10px; }
+  .score { font-size: 20px; }
+}
+
+/* Motion answers the player's actions. Without it everything simply appears
+   in its final state. */
+.stamped, .slam { transform-box: fill-box; transform-origin: center; }
+.fade-out { opacity: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .stamped { animation: lt-stamp 0.26s ease-out both; }
+  .slam { animation: lt-slam 0.34s cubic-bezier(0.2, 1.5, 0.4, 1) both; }
+  .fade-in { animation: lt-in 0.2s ease-out both; }
+  .fade-out { opacity: 1; animation: lt-out 0.16s ease-in both; }
+  .after { animation: lt-in 0.4s ease-out both; }
+  .sheet.shake { animation: lt-shake 0.3s linear both; }
+  .lt button.do:active:not(:disabled), .guesses button:active, .choice button:active { transform: scale(0.96); }
+
+  /* The photocopier's lamp sweeps the note; the press comes down on it. */
+  .scanning .sheet::after {
+    content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 22%;
+    background: linear-gradient(90deg, transparent, #FFFFFF, transparent);
+    opacity: 0.8; animation: lt-scan 0.95s ease-in-out both;
+  }
+  .pressing .sheet::after {
+    content: ''; position: absolute; inset: 0; background: var(--note-ink);
+    animation: lt-press 0.76s cubic-bezier(0.6, 0, 0.4, 1) both;
+  }
+
+  @keyframes lt-stamp { from { transform: scale(1.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes lt-slam { from { transform: scale(2.4); opacity: 0; } 60% { opacity: 1; } to { transform: scale(1); opacity: 1; } }
+  @keyframes lt-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes lt-out { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes lt-shake { 0%, 100% { transform: none; } 20% { transform: translate(-3px, 2px) rotate(-0.4deg); } 50% { transform: translate(3px, -1px) rotate(0.3deg); } 80% { transform: translate(-1px, 1px); } }
+  @keyframes lt-scan { from { transform: translateX(-110%); } to { transform: translateX(470%); } }
+  @keyframes lt-press { 0% { transform: translateY(-101%); } 42%, 58% { transform: translateY(0); } 100% { transform: translateY(-101%); } }
+}

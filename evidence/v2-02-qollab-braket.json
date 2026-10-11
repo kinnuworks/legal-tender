@@ -1,0 +1,79 @@
+{
+ "project": "Legal Tender",
+ "version": "2.0.0",
+ "label": "AWS Braket local simulator (Qollab)",
+ "saved_at": "2026-10-11T10:43:44+00:00",
+ "source": "The RESULTS line this run wrote to Qollab's console.",
+ "results": {
+  "backend": "default",
+  "mode": "local",
+  "shots": 1024,
+  "rows": [
+   {
+    "key": "honest",
+    "k": 6144,
+    "n": 6144
+   },
+   {
+    "key": "photocopier",
+    "k": 5099,
+    "n": 8192
+   },
+   {
+    "key": "press",
+    "k": 3086,
+    "n": 4096
+   },
+   {
+    "key": "single",
+    "k": 6858,
+    "n": 8192
+   },
+   {
+    "key": "lenient",
+    "k": 3003,
+    "n": 4096
+   },
+   {
+    "key": "lenient-single",
+    "k": 7010,
+    "n": 8192
+   },
+   {
+    "key": "universal",
+    "k": 4117,
+    "n": 6144
+   },
+   {
+    "key": "universal-single",
+    "k": 10261,
+    "n": 12288
+   },
+   {
+    "key": "patient-2",
+    "k": 775,
+    "n": 1024
+   },
+   {
+    "key": "patient-4",
+    "k": 504,
+    "n": 1024
+   },
+   {
+    "key": "patient-6",
+    "k": 341,
+    "n": 1024
+   },
+   {
+    "key": "patient-8",
+    "k": 281,
+    "n": 1024
+   },
+   {
+    "key": "patient-12",
+    "k": 185,
+    "n": 1024
+   }
+  ]
+ }
+}
