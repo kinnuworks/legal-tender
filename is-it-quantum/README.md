@@ -52,6 +52,7 @@ Each machine row is one run on Qollab, read from the line the run writes to the 
 | Built-in simulator (Qollab) | 1.01 (0.97 to 1.04) | 4,096 | four jobs |
 | AWS Braket local simulator (Qollab) | 1.00 (0.96 to 1.03) | 4,096 | four jobs |
 | IBM Kingston noise model (Qollab) | 0.89 (0.86 to 0.93) | 4,096 | four jobs |
+| IonQ Aria 1 noise model (Qollab) | 0.91 (0.87 to 0.94) | 4,096 | one job |
 | A perfect machine | 1.00 | | |
 | The coin flipper | 0.00 | | |
 | The mimic | 0.25 | | |
@@ -59,7 +60,9 @@ Each machine row is one run on Qollab, read from the line the run writes to the 
 
 The three fakers' scores are their exact averages over the four circuits, worked out from the fingerprints.
 
-The two ideal simulators score 1 within their intervals. IBM's Kingston noise model scores 0.89, six standard errors below a perfect machine. The test sees that machine's errors with nothing but its answers to go on.
+The two ideal simulators score 1 within their intervals. IBM's Kingston noise model scores 0.89 and IonQ's Aria 1 noise model 0.91, each five or six standard errors below a perfect machine. The test sees a machine's errors with nothing but its answers to go on.
+
+The IonQ row took six minutes, because IonQ's cloud simulates every shot on its own. The page now sends half as many shots to IonQ's simulators, 512 for each circuit.
 
 To reproduce a row: run the project on that machine, open Results, and press **Save the evidence**. The file holds the machine's name, each circuit's fingerprint, every answer the machine gave and the scores.
 

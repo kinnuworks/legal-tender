@@ -9,7 +9,7 @@ from qiskit import transpile
 from . import VERSION, circuits, score as scoring
 
 LOCAL_SHOTS = 1024
-REMOTE_SHOTS = 1024   # IonQ simulators: one job, so it may as well be a good one
+REMOTE_SHOTS = 512    # IonQ simulators run every shot separately, so more is slow
 QPU_SHOTS = 400        # a real IonQ machine: the same job, priced by the shot
 FAKERS = ("coin", "mimic", "peeker")
 

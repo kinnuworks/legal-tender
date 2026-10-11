@@ -352,7 +352,9 @@ await guard(async () => {
   try { hint = /ionq/i.test(String(BACKEND?.name ?? '')) ? 'remote' : ''; } catch { hint = ''; }
   S.info = await call('describe', BACKEND, hint);
   $('machine').textContent = `Machine: ${S.info.backend}`;
-  say(S.info.kind === 'remote' ? 'Running all four circuits as one job.' : 'Running four random circuits.');
+  say(S.info.kind === 'remote'
+    ? "Running all four circuits as one job. IonQ's cloud simulates every shot on its own, so this can take a few minutes."
+    : 'Running four random circuits.');
   const run = await call('sample', BACKEND, S.info.kind, S.info.shots);
   if (!run.ok) throw new Error(run.error);
   S.realRun = run;

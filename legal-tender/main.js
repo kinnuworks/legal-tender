@@ -186,7 +186,11 @@ async function printPlate(id, message) {
   if (S.kind === 'remote' && S.sheets.length > 0) {
     throw new Error('This machine prints one plate per run. Press Stop, then Run, to print another.');
   }
-  say(S.kind === 'device' ? `${message} This machine simulates noise, so a plate can take a minute or two.` : message);
+  let note = '';
+  if (S.kind === 'device') note = ' This machine simulates noise, so a plate can take a minute or two.';
+  else if (/qpu/i.test(S.info.backend)) note = ' This is a real quantum computer, and the job waits its turn in a queue. Ours took 26 minutes. Keep this tab open until it returns.';
+  else if (S.kind === 'remote') note = " IonQ's cloud simulates every shot on its own, so this takes from half a minute to a few minutes.";
+  say(`${message}${note}`);
   let sheet;
   try {
     sheet = await call('print_plate', BACKEND, id, S.kind, S.info.shots);
