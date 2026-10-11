@@ -16,7 +16,7 @@ Four things set it apart.
 
 - The page proves its own limits. When it loads it works out the most any forging machine could ever score, and the exact score of each circuit it runs. The two agree to twelve decimal places, so each circuit is the best machine there can be. Nothing is taken from a paper on trust.
 - It runs three optimal copying machines as circuits, each matched to its limit: 75%, 85.4% and 66.7% (83.3% for a single copy).
-- It was measured on seven machines on Qollab, with a 95% interval on every number.
+- It was measured on eight machines on Qollab, one of them a real IonQ Forte 1 quantum computer, with a 95% interval on every number.
 - It ends in a design rule for real hardware. A six-way note needs a machine whose genuine qubits pass 83.3% of the time. The textbook four-way note needs 85.4%, and on any machine its safe tickets are 12 to 39% longer.
 
 ## Run it
@@ -101,6 +101,7 @@ Each cell is a pass rate per qubit with its 95% Wilson interval.
 | IonQ Forte 1 noise model (Qollab) | one job per run | 72.4% (70.4 to 74.3) | 65.3% (63.6 to 67.0) | 1,024 |
 | IonQ Forte Enterprise 1 noise model (Qollab) | one job per run | 69.2% (67.2 to 71.2) | 63.3% (61.6 to 65.0) | 1,024 |
 | IBM Kingston noise model (Qollab) | 61.4% (59.9 to 62.9) | 71.9% (69.9 to 73.8) | 65.1% (63.4 to 66.8) | 512 |
+| IonQ Forte 1, real quantum computer (Qollab) | one job per run | 74.0% (70.9 to 76.9) | 65.2% (62.5 to 67.9) | 400 |
 | Theory, ideal machine | 62.5% | 75.0% | 66.7% |  |
 
 **Forgiving teller: how often one qubit passes on one copy**
@@ -114,20 +115,24 @@ Each cell is a pass rate per qubit with its 95% Wilson interval.
 | IonQ Forte 1 noise model (Qollab) | 100.0% (99.9 to 100.0) | 83.9% (82.8 to 85.0) | 81.8% (80.9 to 82.8) | +14.6 and +16.7 points | 1,024 |
 | IonQ Forte Enterprise 1 noise model (Qollab) | 100.0% (99.9 to 100.0) | 82.3% (81.1 to 83.5) | 80.6% (79.6 to 81.5) | +14.6 and +16.7 points | 1,024 |
 | IBM Kingston noise model (Qollab) | 99.9% (99.7 to 99.9) | 82.4% (81.2 to 83.5) | 82.0% (81.0 to 82.9) | +14.5 and +16.5 points | 512 |
+| IonQ Forte 1, real quantum computer (Qollab) | 99.8% (99.4 to 100.0) | 86.9% (85.2 to 88.5) | 81.0% (79.4 to 82.6) | +14.5 and +16.5 points | 400 |
 | Theory, ideal machine | 100.0% | 85.4% | 83.3% | +14.6 and +16.7 points |  |
 <!-- RESULTS:END -->
 
 Rows were run on Qollab and read from the line each run writes to the console. The files are in the [repository's](https://github.com/kinnuworks/legal-tender) `evidence/` folder, and `tools/ledger.py` builds these tables from them.
 
-Five things stand out.
+![Console of the run on the real IonQ Forte 1: 22 qubits, 400 shots, the measured rates and the proof lines](https://raw.githubusercontent.com/kinnuworks/legal-tender/main/docs/hardware-run.png)
 
-- Against a strict teller, six ways beats four on every machine. The forger's best score is 6 to 8 points lower on the six-way note, a gap of at least four standard errors everywhere. The proof predicts 8.3 points on an ideal machine.
-- Against a forgiving teller the six-way note holds the forger 1.7 to 2.6 points lower on six of the seven machines, each gap more than twice its standard error. The proof predicts 2.1. On IBM's Kingston model the gap is 0.4 points, well inside the noise, so that row does not separate the two notes.
-- No machine let the forger past a limit. `tools/ledger.py --check` compares every interval with its limit, and none sits above one.
+Six things stand out.
+
+- It holds on a real quantum computer. One job on IonQ Forte 1 (22 qubits, 400 shots, 16 seconds of machine time after 26 minutes in the queue) put the best forger at 74.0% on the four-way note and 65.2% on the six-way note. The gap is 8.8 points, more than four standard errors. Against a forgiving teller the gap is 5.9 points, five standard errors.
+- Against a strict teller, six ways beats four on every machine. The forger's best score is 6 to 9 points lower on the six-way note, a gap of at least four standard errors everywhere. The proof predicts 8.3 points on an ideal machine.
+- Against a forgiving teller the six-way note holds the forger 1.7 to 5.9 points lower on seven of the eight machines, each gap more than twice its standard error. The proof predicts 2.1. On IBM's Kingston model the gap is 0.4 points, well inside the noise, so that row does not separate the two notes.
+- No machine let the forger past a limit. `tools/ledger.py --check` compares every interval with its limit, and none sits above one. The closest call is the second press on the real machine: 86.9% measured against a limit of 85.4%, which its interval of 85.2 to 88.5 still contains.
 - Noise costs the forger. On IonQ's four noise models the forger lands 1 to 6 points short of each limit, because a forging circuit has three to six two-qubit gates per qubit. The Forte Enterprise 1 model is the harshest of the four.
-- The genuine qubit's 100% on the IonQ rows needs a caution. IonQ's service drops the barrier between the bank's printing and the teller's check and merges the two into nothing, so that column shows the merge and says nothing about the machine. On IBM's Kingston model the barrier holds and both are run as gates: a genuine qubit failed 4 times in 3,072 there. At that rate a safe ticket needs 106 qubits four-way and 93 six-way.
+- The genuine qubit's 100% on the IonQ noise models needs a caution. IonQ's service drops the barrier between the bank's printing and the teller's check and merges the two into nothing, so that column shows the merge and says nothing about the machine. On the real Forte 1 a genuine qubit still failed 2 times in 1,200, which is the machine's own preparation and read-out error. On IBM's Kingston model the barrier holds and both are run as gates: a genuine qubit failed 4 times in 3,072 there. At the real machine's rate a safe ticket needs 122 qubits four-way and 106 six-way.
 
-IonQ backends take one job per run, so the photocopier column is empty for those rows. Their one job is a 22-qubit sheet with 1,024 shots, which gives each forger rate two to six thousand samples.
+IonQ backends take one job per run, so the photocopier column is empty for those rows. Their one job is a 22-qubit sheet, with 1,024 shots on the simulators and 400 on the real machine.
 
 ### The heist
 
@@ -202,9 +207,9 @@ The game fits a 20-minute slot. Students play act one and write down their pass 
 
 ## What is new here
 
-- A new context. No other project on Qollab covers quantum money.
+- A new context. We found no other project on Qollab that covers quantum money.
 - A proof that runs. The optimality of each copying circuit is computed on the page, from an eigenvalue and the circuit's own amplitudes, and printed with every run.
-- Three optimal cloners and the adaptive attack as explicit circuits from standard gates, run on any Qollab backend, and reported with intervals. As far as we can find, this is the first playable version of the adaptive attack on a whole note.
+- Three optimal cloners and the adaptive attack as explicit circuits from standard gates, run on any Qollab backend, a real IonQ Forte 1 among them, and reported with intervals. As far as we can find, this is the first playable version of the adaptive attack on a whole note.
 - A result with a number on it. The game measures both floors on each machine and turns them into ticket lengths, which shows what the textbook four-way note costs on real hardware and what six ways saves.
 - A way of teaching. The player fails to copy a qubit before reading a word about why, pulls off the one attack that works, and then gets to fix the note.
 
@@ -266,7 +271,7 @@ All code was written inside the build window, 9 to 11 October 2026, starting fro
 
 ## Limits
 
-- No quantum computer can hold a banknote today. Qubit memories last seconds, and this project runs on simulators.
+- No quantum computer can hold a banknote today. Qubit memories last seconds, and all but one of these runs are on simulators.
 - Eight qubits is a toy note. A real one would use a few hundred, as the ticket table shows.
 - The genuine qubit's pass rate on IonQ's models says little. IonQ's service drops barriers and merges the bank's printing and the teller's check into nothing before the circuit runs, so that figure shows the merge. The forging circuits can't be merged away, and their rates do carry the noise model.
 - No simulator here models a qubit waiting in a wallet. That waiting is where a real note would lose most of its quality, and it is why the calculator takes the genuine pass rate as an input.
@@ -274,14 +279,16 @@ All code was written inside the build window, 9 to 11 October 2026, starting fro
 - The ticket lengths are upper bounds, and they treat each genuine qubit as failing independently.
 - The patient forger is simulated up to 12 visits per probe (14 qubits). The odds beyond that are theory.
 - The whole-note heist runs on the ideal simulators only. It takes about thirty small jobs, which is too slow on a noise model and more than an IonQ backend allows in one run.
-- Noise models are models. A machine's real numbers can differ from its simulator's.
+- Noise models are models. A machine's real numbers can differ from its simulator's, as the two Forte 1 rows show.
+- The hardware row is one job of 400 shots, so its intervals are about three points wide either way.
+- Every check is arranged so that a pass reads 0. A machine that misreads 1 as 0 more often than the reverse would flatter the forger a little. Mixing the two readings across qubits would remove that.
 
 ## Fork it
 
 - Print longer notes and watch the pass rate fall.
 - Add the variant from [2] where the bank verifies over a classical channel.
 - Try a note with eight or twelve states and compute its limits with `proof.py`. One call gives the answer.
-- Run the one-job sheet on real IonQ hardware and add a row to the tables. On a real machine the page sends the same sheet with 400 shots.
+- Repeat the run on real IonQ hardware with more shots and tighten the last row of the tables. On a real machine the page sends the same sheet with 400 shots.
 
 ## References
 

@@ -4,7 +4,7 @@ A banknote you can't photocopy. Go on, try.
 
 ![A forged quantum banknote on the bank's counter: the teller has stamped it and some of its eight qubits failed](docs/cover.png)
 
-Legal Tender is a forgery game with a proof inside it, built for the Qollab x IonQ hackathon, October 2026. The bank prints a note whose serial number is eight qubits. You get three ways to turn one note into two, and then you change sides and redesign the note. Every note, forgery and teller check is a Qiskit circuit. The page works out the most any forging machine could score and shows that its circuits reach it.
+Legal Tender is a forgery game with a proof inside it, built for the Qollab x IonQ hackathon, October 2026. The bank prints a note whose serial number is eight qubits. You get three ways to turn one note into two, and then you change sides and redesign the note. Every note, forgery and teller check is a Qiskit circuit. The page works out the most any forging machine could score and shows that its circuits reach it. The measurements cover seven simulators and one real IonQ Forte 1.
 
 This effort is supported by Qollab & IonQ.
 

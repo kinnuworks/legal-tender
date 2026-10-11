@@ -1,0 +1,49 @@
+{
+ "project": "Legal Tender",
+ "version": "2.0.0",
+ "label": "IonQ Forte 1, real quantum computer (Qollab)",
+ "saved_at": "2026-10-11T12:00:46+00:00",
+ "source": "The RESULTS line this run wrote to Qollab's console.",
+ "results": {
+  "backend": "ionq_qpu.forte-1",
+  "mode": "remote",
+  "shots": 400,
+  "rows": [
+   {
+    "key": "honest",
+    "k": 1198,
+    "n": 1200
+   },
+   {
+    "key": "press",
+    "k": 592,
+    "n": 800
+   },
+   {
+    "key": "single",
+    "k": 1321,
+    "n": 1600
+   },
+   {
+    "key": "lenient",
+    "k": 602,
+    "n": 800
+   },
+   {
+    "key": "lenient-single",
+    "k": 1391,
+    "n": 1600
+   },
+   {
+    "key": "universal",
+    "k": 783,
+    "n": 1200
+   },
+   {
+    "key": "universal-single",
+    "k": 1945,
+    "n": 2400
+   }
+  ]
+ }
+}
