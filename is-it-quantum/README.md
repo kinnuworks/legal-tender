@@ -1,6 +1,6 @@
 # Is it quantum?
 
-[Demo video](ADD YOUR PUBLIC VIDEO LINK HERE) | [Source on GitHub](https://github.com/kinnuworks/legal-tender/tree/main/is-it-quantum) | [Results](#results) | [Limits](#limits) | MIT licence
+[Demo video](https://youtu.be/AM3Pjij9mn0) | [Source on GitHub](https://github.com/kinnuworks/legal-tender/tree/main/is-it-quantum) | [Results](#results) | [Limits](#limits) | MIT licence
 
 **Two machines say they ran your circuit. One of them is faking it.** You try to pick the real one by eye. Then you score both with cross-entropy benchmarking, the test behind Google's quantum supremacy claims, and watch three fakers attack it. One of them wins. Last, you use the same test for what laboratories use it for: measuring the error in each layer of gates on the machine you picked.
 
