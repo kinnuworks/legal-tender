@@ -8,7 +8,7 @@ Legal Tender is a forgery game with a proof inside it, built for the Qollab x Io
 
 This effort is supported by Qollab & IonQ.
 
-Play it on Qollab: ADD YOUR QOLLAB PROJECT LINK HERE
+Play it on Qollab: https://qollab.xyz/u/kinnu/legal-tender
 
 The full write-up, with results, the proof and derivations, is in [legal-tender/README.md](legal-tender/README.md). That folder is exactly what runs on Qollab.
 
