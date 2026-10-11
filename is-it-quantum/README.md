@@ -87,7 +87,7 @@ Four things to read from it.
 
 - The ideal simulator's interval contains 100%, so the method does not invent a decay where there is none.
 - All four noise models show a decay, and every interval excludes 100%. One layer here is ten single-qubit turns and two CNOTs before the machine compiles it, so these are errors per layer of this circuit on each machine's wiring. They are not per-gate figures.
-- One score and the sweep rank the machines differently. At five layers Fez scores 0.92, second best and ahead of Kingston and Miami. The sweep says its layers are the worst of the four: 2.5% lost per layer against 1.2 to 1.4%, a gap of 2.5 to 3 standard errors. Fez starts clean and decays fast. Miami starts 7% down, a fixed cost of preparing and reading its qubits, and then loses little per layer. By 12 layers Miami is ahead, 0.80 to 0.75.
+- One score and the sweep rank the machines differently. At five layers Fez scores 0.92, second best and ahead of Kingston and Miami. The sweep says its layers are the worst of the four: 2.5% lost per layer against 1.2 to 1.4%, a gap of about 2.5 to 3 standard errors. Fez starts clean and decays fast. Miami starts about 7% down, a fixed cost of preparing and reading its qubits, and then loses little per layer. By 12 layers Miami is ahead, 0.80 to 0.75.
 - Every point is within 1.5 standard errors of its curve. A single rate is still a model, and with two circuits per depth and one run per machine these rankings need repeating before anyone leans on them.
 
 To reproduce a row: run the project on that machine, open Results, and press **Save the evidence**. The file holds the machine's name, each circuit's fingerprint, every answer the machine gave, the scores and the sweep.
