@@ -79,6 +79,13 @@ html, body { margin: 0; background: #E8EBE6; }
 .brief h2 { margin-bottom: 4px; }
 .brief .goal { margin: 0; max-width: 60ch; }
 .panel h3 { margin-top: 0; }
+/* What you press and what came of it sit beside the note, so neither needs a scroll. */
+.controls { border-bottom: 1px solid var(--rule); padding-bottom: 18px; margin-bottom: 18px; }
+.controls .row { margin: 0; }
+.controls .row .do { flex: 1 1 0; white-space: nowrap; padding: 10px 12px; font-size: 15px; }
+.controls .row .do:first-child { flex-basis: 100%; padding: 14px 18px; font-size: 17px; }
+.controls .verdict-line { margin-top: 16px; }
+.controls .legend:empty { display: none; }
 .card, .below { max-width: 780px; }
 .below { margin-top: 12px; }
 

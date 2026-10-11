@@ -624,12 +624,14 @@ function renderCopy(kind, { headline = '', grid = '', animate = false } = {}) {
         ${notes}
         ${guessRow}
         ${grid}
-        <p class="verdict-line${late}>${verdict}</p>
-        <p class="why${late}>${why}</p>
-        <div class="row${late}>${buttons}</div>
-        <div class="legend${late}>${key}</div>
       </div>
       <aside class="panel">
+        <div class="controls">
+          <div class="row${late}>${buttons}</div>
+          <p class="verdict-line${late}>${verdict}</p>
+          <p class="why${late}>${why}</p>
+          <div class="legend${late}>${key}</div>
+        </div>
         <h3>How it works</h3>
         <ol class="steps">${c.steps.map((step) => `<li>${step}</li>`).join('')}</ol>
         ${kind === 'press' ? proofLine() : ''}
@@ -758,13 +760,15 @@ function renderUpgrade({ headline = '', grid = '', animate = false } = {}) {
         <p class="hint">${S.ways === 'six' ? 'Straight, diagonal or circular. The forger has a third thing to get wrong.' : 'Straight or diagonal. This is the note from the first three acts.'}</p>
         ${notes}
         ${grid}
-        <p class="verdict-line${late}>${verdict}</p>
-        <p class="why${late}>${why}</p>
-        <div class="row${late}>${buttons}</div>
-        <div class="legend${late}>${key}</div>
         <p class="tally">${tally}</p>
       </div>
       <aside class="panel">
+        <div class="controls">
+          <div class="row${late}>${buttons}</div>
+          <p class="verdict-line${late}>${verdict}</p>
+          <p class="why${late}>${why}</p>
+          <div class="legend${late}>${key}</div>
+        </div>
         <h3>How it works</h3>
         <ol class="steps">
           <li>The forger's best press was built for the note you have been printing, which sets each qubit one of four ways.</li>
@@ -965,6 +969,7 @@ function renderPatient({ headline = '', grid = '', animate = false, part = 'heis
   const heist = hasHeist();
   const mine = (key) => (part === key ? { headline, grid, animate } : { headline: '', grid: '', animate: false });
   let desk = '';
+  let controls = '';
   let how;
   if (heist) {
     const options = heistChoices();
@@ -1003,10 +1008,12 @@ function renderPatient({ headline = '', grid = '', animate = false, part = 'heis
     desk = `${notes}
       <div class="guess-row heist-row"><p class="guess-label">Visits per probe</p><div class="choice" id="heist-visits" role="group" aria-label="Visits to the teller for each probe">${options.map((n) => `<button data-n="${n}" aria-pressed="${n === N}">${n}</button>`).join('')}</div></div>
       ${m.grid}
-      <p class="verdict-line${late}>${verdict}</p>
-      <p class="why${late}>${why}</p>
-      <div class="row${late}><button class="do" id="heist">${h && !m.grid ? 'Try again with a new note' : 'Start the heist'}</button><button class="do quiet" id="heists">Run a hundred heists</button></div>
       <p class="tally">${tally}</p>`;
+    controls = `<div class="controls">
+        <div class="row${late}><button class="do" id="heist">${h && !m.grid ? 'Try again with a new note' : 'Start the heist'}</button><button class="do quiet" id="heists">Run a hundred heists</button></div>
+        <p class="verdict-line${late}>${verdict}</p>
+        <p class="why${late}>${why}</p>
+      </div>`;
     how = `<li>This only works if the teller hands a good note back after checking it.</li>
       <li>The forger touches one qubit very lightly, sends the note for a check, and repeats. A light touch rarely spoils the note, and enough touches name the qubit.</li>
       <li>One failed check and the note is seized. If all eight seals are read, the forger prints copies the teller cannot tell from the original.</li>
@@ -1024,6 +1031,7 @@ function renderPatient({ headline = '', grid = '', animate = false, part = 'heis
     <section class="counter">
       <div class="desk">${desk}</div>
       <aside class="panel">
+        ${controls}
         <h3>How it works</h3>
         <ol class="steps">${how}</ol>
       </aside>
