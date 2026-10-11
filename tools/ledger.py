@@ -53,7 +53,7 @@ def table(title, columns, runs, extra=None):
     head = ["Machine"] + [f"{name} (limit {100 * limit:.1f}%)" if limit < 1 else name for _, name, limit in columns]
     if extra:
         head.append(extra[0])
-    head.append("Shots per cell")
+    head.append("Shots per job")
     out = [f"**{title}**", "", "| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
     for run in runs:
         rows = {r["key"]: r for r in run["results"]["rows"]}

@@ -2,7 +2,7 @@
 
 [Demo video](https://youtu.be/hcYQKXyhFs4) | [Source on GitHub](https://github.com/kinnuworks/legal-tender) | [The proof](#the-proof-on-the-page) | [Results](#results) | MIT licence
 
-**A banknote you can't photocopy. Go on, try.** You get three ways to forge a note whose serial number is eight qubits. Then you change sides and redesign the note. Every note, forgery and teller check is a Qiskit circuit run on the machine you pick, and as the page loads it proves that no machine of any kind could forge a qubit better than the ones it runs.
+**A banknote you can't photocopy. Go on, try.** You get three ways to forge a note whose serial number is eight qubits. Then you change sides and redesign the note. Every note, forgery and teller check is a Qiskit circuit run on the machine you pick, and as the page loads it proves that no machine given one look at a qubit could copy it better than the ones it runs.
 
 **On a real IonQ Forte 1:** one 22-qubit job put the best possible forger at 74.0% per qubit against the textbook note and 65.2% against our six-way note. The proven limits are 75% and 66.7%. The gap between the two notes is 8.8 points, more than four standard errors, and seven simulators agree with it.
 
@@ -50,7 +50,7 @@ Quantum banknotes need qubits that keep for days, and no machine has those yet. 
 
 Use a recent Chrome, Edge, Brave or Opera, or Firefox 153 or later.
 
-On an IonQ simulator Qollab allows one job per run. The page spends it on one 22-qubit sheet that samples every machine in the project, then opens acts two and four. Acts one and three need a local simulator. IonQ's cloud simulates every shot on its own, so that job takes from half a minute to a few minutes.
+On an IonQ simulator Qollab allows one job per run. The page spends it on one 22-qubit sheet that samples every machine in the project, then opens acts two and four. Acts one and three need a local simulator, so judge the full game on the Built-in simulator. IonQ's cloud simulates every shot on its own, so that job takes from half a minute to a few minutes.
 
 On a real IonQ machine the page sends the same sheet with 400 shots. Ours waited 26 minutes in the queue and cost 25.79 credits, although Qollab had quoted 0.00.
 
@@ -112,7 +112,7 @@ Each cell is a pass rate per qubit with its 95% Wilson interval.
 <!-- RESULTS:START -->
 **Strict teller: how often one qubit passes on both notes**
 
-| Machine | Photocopier (limit 62.5%) | Best press, four-way note (limit 75.0%) | Best machine, six-way note (limit 66.7%) | Shots per cell |
+| Machine | Photocopier (limit 62.5%) | Best press, four-way note (limit 75.0%) | Best machine, six-way note (limit 66.7%) | Shots per job |
 |---|---|---|---|---|
 | Built-in simulator (Qollab) | 62.2% (61.1 to 63.2) | 74.2% (72.8 to 75.5) | 66.1% (64.9 to 67.3) | 1,024 |
 | AWS Braket local simulator (Qollab) | 62.2% (61.2 to 63.3) | 75.3% (74.0 to 76.6) | 67.0% (65.8 to 68.2) | 1,024 |
@@ -126,7 +126,7 @@ Each cell is a pass rate per qubit with its 95% Wilson interval.
 
 **Forgiving teller: how often one qubit passes on one copy**
 
-| Machine | Genuine qubit | Second press, four-way note (limit 85.4%) | Best machine, six-way note (limit 83.3%) | Margin, four-way and six-way | Shots per cell |
+| Machine | Genuine qubit | Second press, four-way note (limit 85.4%) | Best machine, six-way note (limit 83.3%) | Margin, four-way and six-way | Shots per job |
 |---|---|---|---|---|---|
 | Built-in simulator (Qollab) | 100.0% (99.9 to 100.0) | 85.0% (84.2 to 85.7) | 83.1% (82.4 to 83.7) | +14.6 and +16.7 points | 1,024 |
 | AWS Braket local simulator (Qollab) | 100.0% (99.9 to 100.0) | 85.6% (84.8 to 86.3) | 83.5% (82.8 to 84.1) | +14.6 and +16.7 points | 1,024 |
