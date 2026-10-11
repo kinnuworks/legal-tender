@@ -2,7 +2,7 @@
 
 [Demo video](ADD YOUR PUBLIC VIDEO LINK HERE) | [Source on GitHub](https://github.com/kinnuworks/legal-tender) | [The proof](#the-proof-on-the-page) | [Results](#results) | MIT licence
 
-**A banknote you can't photocopy. Go on, try.** You get three ways to forge a note whose serial number is eight qubits. Then you change sides and redesign the note. Every note, forgery and teller check is a Qiskit circuit run on the machine you pick, and as the page loads it proves that no forging machine of any kind could beat the ones it runs.
+**A banknote you can't photocopy. Go on, try.** You get three ways to forge a note whose serial number is eight qubits. Then you change sides and redesign the note. Every note, forgery and teller check is a Qiskit circuit run on the machine you pick, and as the page loads it proves that no machine of any kind could forge a qubit better than the ones it runs.
 
 **On a real IonQ Forte 1:** one 22-qubit job put the best possible forger at 74.0% per qubit against the textbook note and 65.2% against our six-way note. The proven limits are 75% and 66.7%. The gap between the two notes is 8.8 points, more than four standard errors, and seven simulators agree with it.
 
@@ -28,13 +28,13 @@ That is the idea in one minute: to copy a qubit you have to read it, and reading
 
 Move the pointer across a note and its colour-shifting ink changes, as it does on a real one.
 
-## How it meets the four criteria
+## Where to look for each criterion
 
 | Criterion | What to look at |
 |---|---|
-| Novelty and creativity | We found no other quantum money project on Qollab. You forge the note, then you defend it. The page proves its own limits where other projects cite them. |
+| Novelty and creativity | You forge the note, then you defend it. The page proves its own limits where other projects cite them. One other Qollab project builds on Wiesner's tokens, as permissions for AI agents. We found none that lets you play the forger, runs the adaptive attack or redesigns the note. |
 | Technical execution | Three optimal copying machines and an adaptive attack, each an explicit circuit. Limit and circuit agree to twelve decimal places. 123 tests. Eight machines, one of them a real IonQ Forte 1, with a 95% interval on every number. |
-| Impact potential | It is useful on today's machines: a one-job health check with exact targets, a rule for sizing quantum tickets, and a 20-minute lesson. A six-way ticket works on machines the textbook note can't use and is 12 to 39% shorter everywhere else. See [Who can use it today](#who-can-use-it-today). |
+| Impact potential | A one-job health check with exact targets, a rule for sizing quantum tickets and a 20-minute lesson, all on today's machines. A six-way ticket works on machines the textbook note can't use and is 12 to 39% shorter everywhere else. See [Who can use it today](#who-can-use-it-today). |
 | Documentation quality | This page gives the derivations, the full proof in three lines, the limits we know of, and the files behind every number. |
 
 ## Who can use it today
@@ -227,7 +227,7 @@ The game fits a 20-minute slot. Students play act one and write down their pass 
 
 ## What is new here
 
-- A new context. We found no other project on Qollab that covers quantum money.
+- A new context. One other project on Qollab, Conservation of Authority, builds on Wiesner's tokens as permissions for AI agents. We found none that turns quantum money into something you play, or that covers the adaptive attack and the six-way note.
 - A proof that runs. The optimality of each copying circuit is computed on the page, from an eigenvalue and the circuit's own amplitudes, and printed with every run.
 - Three optimal cloners and the adaptive attack as explicit circuits from standard gates, run on any Qollab backend, a real IonQ Forte 1 among them, and reported with intervals. As far as we can find, this is the first playable version of the adaptive attack on a whole note.
 - A result with a number on it. The game measures both floors on each machine and turns them into ticket lengths, which shows what the textbook four-way note costs on real hardware and what six ways saves.
