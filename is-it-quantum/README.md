@@ -4,7 +4,7 @@
 
 **Two machines say they ran your circuit. One of them is faking it.** You try to pick the real one by eye. Then you score both with cross-entropy benchmarking, the test behind Google's quantum supremacy claims, and watch three fakers attack it. One of them wins. Last, you use the same test for what laboratories use it for: measuring the error in each layer of gates on the machine you picked.
 
-**Measured on Qollab:** on IBM's Kingston noise model each layer of gates keeps 98.6% of the score, an error of 1.4% per layer (0.8 to 2.0). The ideal simulator shows no decay, as it should.
+**Measured on Qollab:** four of IBM's noise models lose 1.2% to 2.5% of the score per layer of gates, and the ideal simulator loses none. The sweep also catches something one score misses: Fez looks second best at five layers and has the worst gates of the four.
 
 ![The line-up: two machines, 24 answers each, and a button to pick the real one](https://raw.githubusercontent.com/kinnuworks/legal-tender/main/docs/iiq-cover.png)
 
@@ -20,7 +20,7 @@ This effort is supported by Qollab & IonQ. Theme: Quantum Unlocked.
 
 1. **Step 1**, play the line-up twice and read the line under it. At five qubits there is a trick, counting repeats, and the page tells you why it dies at 53.
 2. **Step 3**, The cheats. Two fakers fail and one scores 2.75 against the real machine's 1. The panel under the cards says why that is the test's weak spot and why it doesn't save a cheat in practice.
-3. **Step 4**, The decay. The page has already run circuits of 1, 2, 4, 6, 8 and 12 layers on your machine and fitted a curve. On an ideal simulator it is flat. Run the project again on an IBM noise model and it is not.
+3. **Step 4**, The decay. The page has already run circuits of 1, 2, 4, 6, 8 and 12 layers on your machine and fitted a curve. On an ideal simulator it is flat. Run the project again on an IBM noise model and it is not. Fez and Miami make a good pair to compare.
 4. **Results** has every number with its interval, and **Save the evidence** writes the answers and scores to a file.
 
 Use a recent Chrome, Edge, Brave or Opera, or Firefox 153 or later. On an IonQ simulator the four circuits run as one 20-qubit job, because Qollab allows one job per run there. Ours took 17 seconds. Step 4 needs six jobs, so it runs on the local simulators only. The page stays live until you press **Stop**.
@@ -73,18 +73,22 @@ Two earlier runs of the same circuits gave 0.89 on Kingston and 0.91 on Aria 1 (
 
 **The decay: score against depth**
 
-| Machine | 1 layer | 2 | 4 | 6 | 8 | 12 | Each layer keeps | Error per layer |
-|---|---|---|---|---|---|---|---|---|
-| Built-in simulator (Qollab) | 0.97 | 1.00 | 0.98 | 0.97 | 1.01 | 1.01 | 100.3% (99.8 to 100.9) | none measurable |
-| IBM Kingston noise model (Qollab) | 0.96 | 0.95 | 0.87 | 0.87 | 0.84 | 0.85 | 98.6% (98.0 to 99.2) | 1.4% (0.8 to 2.0) |
+| Machine | Score at 5 layers | 1 layer | 2 | 4 | 6 | 8 | 12 | Start | Each layer keeps | Error per layer |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Built-in simulator (Qollab) | 1.02 | 0.97 | 1.00 | 0.98 | 0.97 | 1.01 | 1.01 | 0.98 | 100.3% (99.8 to 100.9) | none measurable |
+| IBM Boston noise model (Qollab) | 0.97 | 1.00 | 0.96 | 0.94 | 0.94 | 0.92 | 0.86 | 1.00 | 98.8% (98.2 to 99.4) | 1.2% (0.6 to 1.8) |
+| IBM Kingston noise model (Qollab) | 0.87 | 0.96 | 0.95 | 0.87 | 0.87 | 0.84 | 0.85 | 0.96 | 98.6% (98.0 to 99.2) | 1.4% (0.8 to 2.0) |
+| IBM Miami noise model (Qollab) | 0.88 | 0.93 | 0.89 | 0.85 | 0.83 | 0.82 | 0.80 | 0.93 | 98.6% (97.9 to 99.2) | 1.4% (0.8 to 2.1) |
+| IBM Fez noise model (Qollab) | 0.92 | 0.96 | 0.98 | 0.92 | 0.90 | 0.80 | 0.75 | 1.01 | 97.5% (96.9 to 98.1) | 2.5% (1.9 to 3.1) |
 
-Each cell is the average score of two circuits at that depth, 2,048 answers, with a standard error of 0.02 to 0.03. On Kingston the fitted curve is score = 0.96 × 0.986^layers.
+Each depth cell is the average score of two circuits at that depth, 2,048 answers, with a standard error of 0.02 to 0.03. "Start" is the fitted score at zero layers, and the curve is score = start × keep^layers.
 
-Three things to read from it.
+Four things to read from it.
 
 - The ideal simulator's interval contains 100%, so the method does not invent a decay where there is none.
-- Kingston's interval excludes 100% by more than four standard errors. One layer here is ten single-qubit turns and two CNOTs before the machine compiles it, so 1.4% is an error per layer of this circuit on this machine's wiring. It is not a per-gate figure.
-- Every point is within 1.5 standard errors of the curve, but the 12-layer point is the one furthest above it. A single rate is a model, and with two circuits per depth we can't say whether the decay flattens at depth. More circuits would settle it.
+- All four noise models show a decay, and every interval excludes 100%. One layer here is ten single-qubit turns and two CNOTs before the machine compiles it, so these are errors per layer of this circuit on each machine's wiring. They are not per-gate figures.
+- One score and the sweep rank the machines differently. At five layers Fez scores 0.92, second best and ahead of Kingston and Miami. The sweep says its layers are the worst of the four: 2.5% lost per layer against 1.2 to 1.4%, a gap of 2.5 to 3 standard errors. Fez starts clean and decays fast. Miami starts 7% down, a fixed cost of preparing and reading its qubits, and then loses little per layer. By 12 layers Miami is ahead, 0.80 to 0.75.
+- Every point is within 1.5 standard errors of its curve. A single rate is still a model, and with two circuits per depth and one run per machine these rankings need repeating before anyone leans on them.
 
 To reproduce a row: run the project on that machine, open Results, and press **Save the evidence**. The file holds the machine's name, each circuit's fingerprint, every answer the machine gave, the scores and the sweep.
 
@@ -111,7 +115,7 @@ In 2019 Google ran random circuits on its 53-qubit Sycamore chip and reported th
 People use the same number for plainer jobs.
 
 - Measuring gate error. Step 4 does it: the score falls as circuits deepen, and the rate is the error per layer. It needs no special circuits and nothing from the machine but its answers.
-- Comparing machines. The same circuits on two machines give two scores, and the higher one made fewer mistakes in its gates and read-out. These circuits entangle random pairs, so a machine that can only connect neighbours has to add swaps and pays for them.
+- Comparing machines. The same circuits on two machines give two scores, and the higher one made fewer mistakes in its gates and read-out. The sweep says which of the two it was, as the Fez and Miami rows in Results show. These circuits entangle random pairs, so a machine that can only connect neighbours has to add swaps and pays for them.
 - Catching a provider that cuts corners. A cloud service that returns made-up answers scores near 0.
 
 **In a classroom.** Twenty minutes. Students play the line-up ten times and write down their hits, then try again counting repeats. They watch the scores separate in step 2. Then the question for discussion: the peeker beat the real machine, so is the test broken? The answer is in step 3's last panel.

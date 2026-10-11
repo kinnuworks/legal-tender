@@ -1,0 +1,72 @@
+{
+ "project": "Is it quantum?",
+ "label": "IBM Fez noise model (Qollab)",
+ "version": "1.1.0",
+ "saved_at": "2026-10-11T18:09:46+00:00",
+ "source": "The RESULTS and DECAY lines this run wrote to Qollab's console.",
+ "results": {
+  "backend": "fake_fez",
+  "mode": "local",
+  "shots": 1024,
+  "score": 0.9172829044365054,
+  "se": 0.018439436735231695,
+  "n": 4096,
+  "circuits": [
+   [
+    0.9134,
+    0.0362
+   ],
+   [
+    0.9783,
+    0.0361
+   ],
+   [
+    0.8713,
+    0.0385
+   ],
+   [
+    0.9061,
+    0.0367
+   ]
+  ]
+ },
+ "decay": {
+  "backend": "fake_fez",
+  "shots": 1024,
+  "points": [
+   [
+    1,
+    0.9627,
+    0.0211
+   ],
+   [
+    2,
+    0.9828,
+    0.0211
+   ],
+   [
+    4,
+    0.9162,
+    0.0281
+   ],
+   [
+    6,
+    0.8972,
+    0.0285
+   ],
+   [
+    8,
+    0.7955,
+    0.027
+   ],
+   [
+    12,
+    0.747,
+    0.0282
+   ]
+  ],
+  "keep": 0.9749,
+  "keep_lo": 0.9685,
+  "keep_hi": 0.9813
+ }
+}

@@ -1,0 +1,72 @@
+{
+ "project": "Is it quantum?",
+ "label": "IBM Miami noise model (Qollab)",
+ "version": "1.1.0",
+ "saved_at": "2026-10-11T18:09:46+00:00",
+ "source": "The RESULTS and DECAY lines this run wrote to Qollab's console.",
+ "results": {
+  "backend": "fake_miami",
+  "mode": "local",
+  "shots": 1024,
+  "score": 0.8823254727865755,
+  "se": 0.01865666229041728,
+  "n": 4096,
+  "circuits": [
+   [
+    0.872,
+    0.0368
+   ],
+   [
+    0.8919,
+    0.0363
+   ],
+   [
+    0.892,
+    0.039
+   ],
+   [
+    0.8734,
+    0.0371
+   ]
+  ]
+ },
+ "decay": {
+  "backend": "fake_miami",
+  "shots": 1024,
+  "points": [
+   [
+    1,
+    0.9316,
+    0.0213
+   ],
+   [
+    2,
+    0.8945,
+    0.0214
+   ],
+   [
+    4,
+    0.8484,
+    0.028
+   ],
+   [
+    6,
+    0.8294,
+    0.0286
+   ],
+   [
+    8,
+    0.8181,
+    0.0269
+   ],
+   [
+    12,
+    0.8033,
+    0.0293
+   ]
+  ],
+  "keep": 0.9859,
+  "keep_lo": 0.9795,
+  "keep_hi": 0.9924
+ }
+}

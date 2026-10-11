@@ -1,0 +1,72 @@
+{
+ "project": "Is it quantum?",
+ "label": "IBM Boston noise model (Qollab)",
+ "version": "1.1.0",
+ "saved_at": "2026-10-11T18:09:46+00:00",
+ "source": "The RESULTS and DECAY lines this run wrote to Qollab's console.",
+ "results": {
+  "backend": "fake_boston",
+  "mode": "local",
+  "shots": 1024,
+  "score": 0.9742776031378639,
+  "se": 0.01816103576064554,
+  "n": 4096,
+  "circuits": [
+   [
+    1.0303,
+    0.0347
+   ],
+   [
+    0.952,
+    0.0359
+   ],
+   [
+    0.9503,
+    0.0384
+   ],
+   [
+    0.9645,
+    0.0362
+   ]
+  ]
+ },
+ "decay": {
+  "backend": "fake_boston",
+  "shots": 1024,
+  "points": [
+   [
+    1,
+    1.0014,
+    0.0218
+   ],
+   [
+    2,
+    0.9638,
+    0.0212
+   ],
+   [
+    4,
+    0.9447,
+    0.0289
+   ],
+   [
+    6,
+    0.9444,
+    0.0285
+   ],
+   [
+    8,
+    0.9177,
+    0.0275
+   ],
+   [
+    12,
+    0.8648,
+    0.0283
+   ]
+  ],
+  "keep": 0.9883,
+  "keep_lo": 0.9824,
+  "keep_hi": 0.9943
+ }
+}
