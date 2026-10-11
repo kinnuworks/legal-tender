@@ -34,8 +34,17 @@ Move the pointer across a note and its colour-shifting ink changes, as it does o
 |---|---|
 | Novelty and creativity | We found no other quantum money project on Qollab. You forge the note, then you defend it. The page proves its own limits where other projects cite them. |
 | Technical execution | Three optimal copying machines and an adaptive attack, each an explicit circuit. Limit and circuit agree to twelve decimal places. 123 tests. Eight machines, one of them a real IonQ Forte 1, with a 95% interval on every number. |
-| Impact potential | A design rule for quantum tickets on real hardware: a six-way note works on machines the textbook note can't use, and is 12 to 39% shorter everywhere else. It also fits a 20-minute class. |
+| Impact potential | It is useful on today's machines: a one-job health check with exact targets, a rule for sizing quantum tickets, and a 20-minute lesson. A six-way ticket works on machines the textbook note can't use and is 12 to 39% shorter everywhere else. See [Who can use it today](#who-can-use-it-today). |
 | Documentation quality | This page gives the derivations, the full proof in three lines, the limits we know of, and the files behind every number. |
+
+## Who can use it today
+
+Quantum banknotes need qubits that keep for days, and no machine has those yet. These four uses need nothing that doesn't exist now.
+
+- **Someone checking a machine.** One run on an IonQ backend is one 22-qubit job with seven exact target values. How far a machine falls short of them is a reading of its noise. Ideal simulators land within a point of every target. On IonQ's and IBM's noise models the forgers fall 1 to 6 points short. The real Forte 1 came within 2.4.
+- **Someone designing a quantum ticket.** The **What it's for** tab turns a machine's quality into a safe ticket length. At the 99.8% we measured for genuine qubits on Forte 1, that is 122 qubits for the textbook note and 106 for the six-way note.
+- **A teacher.** The game fits a 20-minute slot, and the lesson plan is [further down](#in-a-classroom).
+- **Someone with a new note design.** `proof.limit(states, teller)` returns the most any forger can score against any set of one-qubit states. It is one call, and [Fork it](#fork-it) lists where to start.
 
 ## Running it on other machines
 
