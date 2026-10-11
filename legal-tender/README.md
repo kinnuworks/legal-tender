@@ -8,6 +8,8 @@ Demo video: ADD YOUR PUBLIC VIDEO LINK HERE
 
 Theme: Quantum Playground. Licence: MIT.
 
+Source, tests and saved runs: https://github.com/kinnuworks/legal-tender
+
 Legal Tender is a forgery game with a proof inside it. The bank prints a note whose serial number is eight qubits. You get three ways to turn that one note into two, and then you change sides and redesign the note. Every note, forgery and teller check is a Qiskit circuit run on the machine you pick.
 
 Four things set it apart.
@@ -115,7 +117,7 @@ Each cell is a pass rate per qubit with its 95% Wilson interval.
 | Theory, ideal machine | 100.0% | 85.4% | 83.3% | +14.6 and +16.7 points |  |
 <!-- RESULTS:END -->
 
-Rows were run on Qollab and read from the line each run writes to the console. The files are in the repository's `evidence/` folder, and `tools/ledger.py` builds these tables from them.
+Rows were run on Qollab and read from the line each run writes to the console. The files are in the [repository's](https://github.com/kinnuworks/legal-tender) `evidence/` folder, and `tools/ledger.py` builds these tables from them.
 
 Five things stand out.
 
